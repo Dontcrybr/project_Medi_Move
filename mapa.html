@@ -142,16 +142,16 @@
   <i class="fa fa-bars"></i>
 </button>
         <ul class="menu-links" id="menuLinks">
-          <li><a href="/html/home.html">Home</a></li>
+          <li><a href="/home.html">Home</a></li>
           <li><a href="#">Parceiros</a></li>
-          <li><a href="/html/mapa.html">Mapa</a></li>
+          <li><a href="/mapa.html">Mapa</a></li>
           <li><a href="#">Médicos</a></li>
           <li><a href="#">Consulta</a></li>
           <li><a href="#">Hospitais</a></li>
         </ul>
         <div class="top-bar">
           <button id="dark-mode-toggle" title="Alternar modo claro/escuro">🌙</button>
-          <a id="login-link" href="/html/login.html">Entrar</a>
+          <a id="login-link" href="/login.html">Entrar</a>
           <div id="user-menu" class="user-dropdown hidden">
             <span id="user-name">Olá, Fulano</span>
             <div class="dropdown-content">
@@ -277,7 +277,7 @@
         };
       } else {
         loginFloatBtn.textContent = "Entrar";
-        loginFloatBtn.onclick = () => window.location.href='/html/login.html';
+        loginFloatBtn.onclick = () => window.location.href='/login.html';
         loginFloatBtn.classList.remove('logged');
         loginFloatBtn.style.background = "#007bff";
         logoutFloatBtn.style.display = "none";
