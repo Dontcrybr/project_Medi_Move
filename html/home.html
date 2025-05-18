@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediMove - Home</title>
+    <link rel="stylesheet" href="/styles/home.css" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+    :root {
+      --bg-color: #f4f8ff;
+      --text-color: #222;
+      --header-bg: rgba(255, 255, 255, 0.85);
+      --footer-bg: #e3e9f4;
+      --link-color: #0056b3;
+      --h2-color: #0056b3;
+    }
+    body.dark-mode {
+      --bg-color: #23232b;
+      --text-color: #e0e0e0;
+       --header-bg: rgba(30, 30, 47, 0.9);
+      --footer-bg: #222233;
+      --link-color: #7ecbff;
+      --h2-color: #b3e0ff;
+    }
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header img	 {
+      cursor: pointer;
+      
+    }
+     .nav-content li a {
+        color: var(--text-color);
+        text-decoration: none;
+      }
+
+    body.dark-mode .sobre-nos {
+      
+      transition: background 0.3s, color 0.3s;
+    }
+
+    #themeToggle{
+      background: var(--h2-color);
+    }
+    .sobre-texto {
+      color: var(--text-color);
+      transition: color 0.3s;
+    }
+     .nav-content {
+      background: var(--header-bg);
+      transition: background 0.3s;
+    }
+    .main-footer {
+      background: var(--footer-bg);
+      transition: background 0.3s;
+    }
+    a {
+      color: var(--link-color);
+      transition: color 0.3s;
+    }
+    h2 {
+      color: var(--h2-color);
+      transition: color 0.3s;
+    }
+
+    body.dark-mode #sobreid { 
+      color: #18a2ff; /* Escolha a cor desejada */
+    }
+    body.dark-mode h3 { 
+      color: #94d4ff; /* Escolha a cor desejada */
+    }
+     body.dark-mode footer {
+      color: #b1e0ff; /* Escolha a cor desejada */
+    }
+    body.dark-mode footer a {
+      color: #7ecbff; /* Escolha a cor desejada */
+    }
+    body.dark-mode p {
+      color: #e0e0e0; /* Cor clara para o texto no modo escuro */
+    }
+    body.dark-mode #paragrafo1 {
+      color: #7ecbff; /* Cor clara para o texto no modo escuro */
+    }
+    body.dark-mode li {
+      color: #e0e0e0; /* Cor clara para o texto no modo escuro */
+    }
+    body.dark-mode ul {
+      color: #e0e0e0; /* Cor clara para o texto no modo escuro */
+    }
+    body.dark-mode #themeToggle {
+      background-color: #004794;
+    }
+ 
+
+    /* Tema escuro */
+    .toggle-theme {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      padding: 5px;
+      border-radius: 50%;
+      margin-left: 16px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: color 0.3s;
+    }
+    .theme-float-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2000;
+  background: var(--h2-color);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  font-size: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.theme-float-btn:hover {
+  background: #0056b3;
+}
+  </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <nav class="nav-content">
+        <img src="/imgs/logo sem fundo h.png" id="logo-img"
+          onclick="window.location.href='index.html';" alt="Logo MediMove"
+          width="180" height="auto" class="logo" />
+          <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu">
+    <i class="fa fa-bars"></i>
+  </button>
+        <ul class="menu-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Parceiros</a></li>
+          <li><a href="/html/mapa.html">Mapa</a></li>
+          <li><a href="#sobre">Sobre Nós</a></li>
+          <li><a href="#">Médicos</a></li>
+          <li><a href="#">Consulta</a></li>
+          <li><a href="#">Hospitais</a></li>
+        </ul>
+        <div class="top-bar">
+          <a id="login-link" href="/html/login.html">Entrar</a>
+          <button class="toggle-theme" id="themeToggle"
+            title="Alternar tema">🌙</button>
+          <div id="user-menu" class="user-dropdown hidden">
+            <span id="user-name">Olá, Fulano</span>
+            <div class="dropdown-content">
+              <button id="logout-btn">Sair</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h2>Bem-vindo ao MediMove</h2>
+        <p>Conectando você aos hospitais com mais eficiência e rapidez.</p>
+      </section>
+      <section class="sobre-nos" id="sobre">
+        <div class="sobre-container">
+          <div class="sobre-texto">
+            <h2 id="sobreid">Sobre o MediMove</h2>
+            <h3>Missão</h3>
+            <p>Conectar pessoas aos hospitais com mais disponibilidade e rotas
+              rápidas, salvando vidas com tecnologia e agilidade.</p>
+            <h3>Visão</h3>
+            <p>Ser referência em mobilidade hospitalar no Brasil, integrando
+              saúde, tecnologia e acessibilidade até 2030.</p>
+            <h3>Valores</h3>
+            <ul>
+              <li>Empatia</li>
+              <li>Inovação</li>
+              <li>Transparência</li>
+              <li>Compromisso com a vida</li>
+            </ul>
+            <h3>Como surgiu?</h3>
+            <p>
+              Em momentos de emergência, percebemos como é difícil saber para
+              qual hospital ir. O MediMove nasceu da vontade de usar a
+              tecnologia para salvar tempo e vidas.
+            </p>
+            <h3>Nosso Time</h3>
+            <ul>
+              <li>Miguel Pereira Silva – Desenvolvedor Full Stack</li>
+              <li>Joana Rocha – UX/UI Designer</li>
+              <li>Pedro Alves – Analista de Dados</li>
+            </ul>
+          </div>
+          <div class="sobre-imagem">
+            <img src="/imgs/time_trabalhando.jpg"
+              alt="Equipe do MediMove trabalhando" />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-logo">
+          <img src="/imgs/logo sem fundo h.png" id="logo-img1"
+            alt="MediMove Logo" />
+          <p id="paragrafo1">&copy; 2025 MediMove. Todos os direitos reservados.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Navegação</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#sobre">Sobre Nós</a></li>
+            <li><a href="#">Hospitais</a></li>
+            <li><a href="#">Consulta</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h4>Contato</h4>
+          <p>Email: miguel11psilva@gmail.com</p>
+          <p>Telefone: (11) 96944-5317</p>
+          <div class="social-icons">
+            <a href="https://instagram.com" target="_blank"><i
+                class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com" target="_blank"><i
+                class="fab fa-linkedin"></i></a>
+            <a href="https://wa.me/5511999990000" target="_blank"><i
+                class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+   <!-- Botão flutuante de login/logout para mobile -->
+<button class="login-float-btn" id="loginFloatBtn">Entrar</button>
+<button class="logout-float-btn" id="logoutFloatBtn" style="display:none;">Sair</button>
+<button class="theme-float-btn" id="themeToggle1" title="Alternar tema">🌙</button>
+    
+
+    <script>
+  const themeToggleHeader = document.getElementById('themeToggle');
+const themeToggleMobile = document.getElementById('themeToggle1');
+const body = document.body;
+const logoImg = document.getElementById('logo-img');
+const logoImg1 = document.getElementById('logo-img1');
+
+function setTheme(isDark) {
+  if (isDark) {
+    body.classList.add('dark-mode');
+    if (themeToggleHeader) themeToggleHeader.textContent = '☀️';
+    if (themeToggleMobile) themeToggleMobile.textContent = '☀️';
+    if (logoImg) logoImg.src = '/imgs/logo h.png';
+    if (logoImg1) logoImg1.src = '/imgs/logo h.png';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.remove('dark-mode');
+    if (themeToggleHeader) themeToggleHeader.textContent = '🌙';
+    if (themeToggleMobile) themeToggleMobile.textContent = '🌙';
+    if (logoImg) logoImg.src = '/imgs/logo sem fundo h.png';
+    if (logoImg1) logoImg1.src = '/imgs/logo sem fundo h.png';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+if (themeToggleHeader) {
+  themeToggleHeader.addEventListener('click', () => {
+    const isDark = body.classList.contains('dark-mode');
+    setTheme(!isDark);
+  });
+}
+if (themeToggleMobile) {
+  themeToggleMobile.addEventListener('click', () => {
+    const isDark = body.classList.contains('dark-mode');
+    setTheme(!isDark);
+  });
+}
+
+// Carregar tema salvo
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  setTheme(true);
+}
+</script>
+  
+    <script src="/scripts/home.js"></script>
+  </body>
+</html>

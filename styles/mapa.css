@@ -1,0 +1,355 @@
+ body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8ff;
+      color: #333;
+    }
+
+    main {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      margin: auto;
+      margin-top: 150px;
+      gap: 1rem;
+    }
+
+    #map {
+      flex: 1;
+      height: 520px;
+      border-radius: 12px;
+      background: #ccc; /* apenas para teste */
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .status-text {
+  color: #222;
+  font-weight: bold;
+}
+body.dark-mode .status-text {
+  color: #fff;
+}
+
+    #lista-lateral {
+      width: 300px;
+      max-height: 500px;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #lista-lateral h3 {
+      margin-top: 0;
+    }
+
+    #lista-lateral ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #lista-lateral li {
+      cursor: pointer;
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #lista-lateral li:hover {
+      background-color: #eef3ff;
+    }
+    
+.main-header {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  background-image: url('/imgs/background\ tcc.png'); /* <- Coloque sua imagem */
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  padding: 15px 30px;
+  z-index: 100000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.nav-content {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 15px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ENTRAR {
+ 
+    margin-left: 80px;
+}
+
+.nav-content h1 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.nav-content li a {
+    font-size: 1rem;
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-content ul li a:hover {
+  color: #007bff;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+    .user-menu {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .user-dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+    .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 100px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  padding: 0.5rem;
+  border-radius: 6px;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+}
+
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .dropdown a:hover {
+      background-color: #f2f2f2;
+    }
+
+    .user-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+#logout-btn {
+  background: transparent;
+  border: none;
+  color: rgb(59, 0, 221);
+  font-size: 1rem;
+    border-radius: 6px;
+  cursor: pointer;
+  font-weight:400;
+}
+
+#logout-btn:hover {
+  background-color: #f2f2f2;
+    color: #007bff;
+    transition: background-color 0.3s ease;
+}
+
+    .hidden {
+      display: none !important;
+    }
+
+    #login-link {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 14px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    #login-link:hover {
+      background-color: #0056b3;
+    }
+
+
+
+.logo{
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+.logo:hover{
+    opacity: 0.8;
+}
+
+.theme-float-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2000;
+  background: #0056b3;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  font-size: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.theme-float-btn:hover {
+  background: #004494;
+  color: #fff;
+}
+
+/* Esconde o menu e mostra o hambúrguer em telas menores que 1200px */
+/* Menu padrão: aparece em desktop */
+.menu-links {
+  display: flex;
+  list-style: none;
+  gap: 16px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Esconde o botão hamburger por padrão */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  margin-right: 16px;
+}
+.logout-float-btn {
+   display: none !important;
+  }
+
+
+/* Abaixo de 1200px: esconde menu-links e mostra hamburger */
+@media (max-width: 1200px) {
+  .menu-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: var(--header-bg);
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 1100;
+    width: 200px;
+  }
+  .menu-links.active,
+  .menu-links.open {
+    display: flex;
+  }
+  .menu-links li {
+    margin: 10px 0;
+  }
+  .hamburger {
+    display: block;
+  }
+  .theme-float-btn {
+    display: flex;
+  }
+  #dark-mode-toggle {
+    display: none !important;
+  }
+  
+}
+@media (max-width: 900px) {
+  main {
+    flex-direction: column;
+    margin-top: 120px;
+    gap: 0.5rem;
+  }
+  #lista-lateral {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    max-height: 250px;
+    min-height: 120px;
+    box-sizing: border-box;
+  }
+  #map {
+    width: 100%;
+    height: 350px;
+    min-height: 250px;
+    max-height: 400px;
+  }
+  
+}
+
+@media (max-width: 600px) {
+ 
+  main {
+    padding: 0.5rem;
+    margin-top: 150px;
+  }
+  #lista-lateral {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    max-height: 200px;
+  }
+  #map {
+    height: 220px;
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 400px) {
+  main {
+    padding: 0.5rem;
+    margin-top: 150px;
+  }
+  
+  #lista-lateral {
+    font-size: 0.85rem;
+    padding: 0.8rem;
+    max-height: 160px;
+  }
+  #map {
+    height: 240px;
+    min-height: 300px;
+  }
+  
+  .nav-content {
+    padding: 8px 16px;
+  }
+  .menu-links.open {
+    display: flex;
+  }
+  .hamburger {
+    display: block;
+  }
+  .nav-content {
+    position: relative;
+  }
+  .theme-float-btn {
+    display: flex;
+  }
+  #dark-mode-toggle {
+    display: none !important;
+  }
+}

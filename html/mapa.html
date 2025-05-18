@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediMove - Mapa de Hospitais</title>
+    <link rel="stylesheet" href="/styles/mapa.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+      :root {
+        --bg-color: #f4f8ff;
+        --text-color: #333;
+        --card-bg: #fff;
+        --card-hover: #eef3ff;
+        --btn-bg: #0056b3;
+        --btn-text: #ffffff;
+        --header-bg: rgba(255, 255, 255, 0.85);
+      }
+      body.dark-mode {
+        --bg-color: #1e1e2f;
+        --text-color: #e0e0e0;
+        --card-bg: #2c2c3e;
+        --card-hover: #3c3c5a;
+        --btn-bg: #00366e;
+        --btn-text: #fff;
+        --header-bg: rgba(30, 30, 47, 0.9);
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      .nav-content {
+        background-color: var(--header-bg);
+        transition: background-color 0.3s;
+      }
+      .nav-content li a {
+        color: var(--text-color);
+        text-decoration: none;
+      }
+      #lista-lateral {
+        background-color: var(--card-bg);
+        border-radius: 16px;
+        padding: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      #lista-lateral li:hover {
+        background-color: var(--card-hover);
+      }
+      #lista li {
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .hamburger {
+        filter: invert(1);
+      }
+
+      body.dark-mode .hamburger {
+        filter: invert(0);
+      }
+      button, #rota-mais-proxima, #limpar-rotas, #login-link {
+        background-color: var(--btn-bg) ;
+        color: var(--btn-text) !important;
+        border-radius: 50px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      button:hover, #rota-mais-proxima:hover, #limpar-rotas:hover {
+        transform: scale(1.05);
+      }
+      #dark-mode-toggle {
+        cursor: pointer;
+        background-color: #004080;
+        color: #fff;
+        border: none;
+        font-size: 1.2rem;
+        padding: 8px;
+        border-radius: 50%;
+        margin-left: 10px;
+        transition: transform 0.3s;
+      }
+      #dark-mode-toggle:hover {
+        transform: scale(1.2);
+      }
+      #user-name {
+        color: var(--text-color);
+      }
+      /* Botões flutuantes mobile */
+      .login-float-btn, .logout-float-btn {
+        position: fixed;
+        right: 24px;
+        z-index: 2000;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        cursor: pointer;
+        transition: background 0.3s;
+        display: none;
+      }
+      .login-float-btn {
+        bottom: 90px;
+        background: #007bff;
+        color: #fff;
+      }
+      .login-float-btn.logged {
+        background: #28a745 !important;
+      }
+      .logout-float-btn {
+        bottom: 150px;
+        background: #dc3545 !important;
+        color: #fff;
+      }
+      @media (max-width: 768px) {
+        .login-float-btn, .logout-float-btn {
+          display: block;
+        }
+        .top-bar {
+          display: none !important;
+        }
+        .logout-float-btn {
+   display: block !important;
+  }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="main-header">
+      <nav class="nav-content">
+        <img id="logo-img" src="/imgs/logo sem fundo h.png"
+          onclick="window.location.href='index.html';" alt="Logo MediMove"
+          width="180" class="logo" />
+          <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu">
+  <i class="fa fa-bars"></i>
+</button>
+        <ul class="menu-links" id="menuLinks">
+          <li><a href="/html/home.html">Home</a></li>
+          <li><a href="#">Parceiros</a></li>
+          <li><a href="/html/mapa.html">Mapa</a></li>
+          <li><a href="#">Médicos</a></li>
+          <li><a href="#">Consulta</a></li>
+          <li><a href="#">Hospitais</a></li>
+        </ul>
+        <div class="top-bar">
+          <button id="dark-mode-toggle" title="Alternar modo claro/escuro">🌙</button>
+          <a id="login-link" href="/html/login.html">Entrar</a>
+          <div id="user-menu" class="user-dropdown hidden">
+            <span id="user-name">Olá, Fulano</span>
+            <div class="dropdown-content">
+              <button id="logout-btn">Sair</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- MAPA -->
+    <main>
+      <div id="lista-lateral">
+        <h3>Locais encontrados</h3>
+        <label for="filtro"><strong>Filtrar por tipo:</strong></label>
+        <select id="filtro">
+          <option value="all">Todos</option>
+          <option value="hospital">Hospital</option>
+          <option value="clinic">Clínica</option>
+          <option value="doctors">Posto Médico</option>
+          <option value="pharmacy">Farmácia</option>
+        </select>
+        <ul id="lista"></ul>
+        <button id="rota-mais-proxima"
+          style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">
+          Rota para o hospital mais próximo
+        </button>
+        <button id="limpar-rotas"
+          style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">
+          Limpar Rota</button>
+      </div>
+      <div id="map"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+      <p>© 2025 MediMove. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Botões flutuantes para mobile -->
+    <button class="login-float-btn" id="loginFloatBtn">Entrar</button>
+<button class="logout-float-btn" id="logoutFloatBtn" style="display:none;">Sair</button>
+<button class="theme-float-btn" id="themeToggleMobile" title="Alternar tema">🌙</button>
+
+    <script src="/scripts/mapa.js"></script>
+    <script src="/scripts/home.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script>
+  // Modo escuro igual home
+  const themeToggleHeader = document.getElementById('dark-mode-toggle');
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
+  const htmlBody = document.body;
+  const logoImg = document.getElementById('logo-img');
+  function setDarkMode(enabled) {
+    if (enabled) {
+      htmlBody.classList.add('dark-mode');
+      if (themeToggleHeader) themeToggleHeader.textContent = '☀️';
+      if (themeToggleMobile) themeToggleMobile.textContent = '☀️';
+      if (logoImg) logoImg.src = '/imgs/logo h.png';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      htmlBody.classList.remove('dark-mode');
+      if (themeToggleHeader) themeToggleHeader.textContent = '🌙';
+      if (themeToggleMobile) themeToggleMobile.textContent = '🌙';
+      if (logoImg) logoImg.src = '/imgs/logo sem fundo h.png';
+      localStorage.setItem('theme', 'light');
+    }
+  }
+  if (themeToggleHeader) {
+    themeToggleHeader.addEventListener('click', () => {
+      const dark = htmlBody.classList.contains('dark-mode');
+      setDarkMode(!dark);
+    });
+  }
+  if (themeToggleMobile) {
+    themeToggleMobile.addEventListener('click', () => {
+      const dark = htmlBody.classList.contains('dark-mode');
+      setDarkMode(!dark);
+    });
+  }
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') setDarkMode(true);
+</script>
+<script>
+  // Login/logout igual home
+  document.addEventListener("DOMContentLoaded", () => {
+    // Desktop
+    const loginLink = document.getElementById("login-link");
+    const userMenu = document.getElementById("user-menu");
+    const userNameSpan = document.getElementById("user-name");
+    const logoutBtn = document.getElementById("logout-btn");
+    const loggedUser = localStorage.getItem("loggedUser");
+
+    if (loggedUser) {
+      if (loginLink) loginLink.classList.add("hidden");
+      if (userMenu) userMenu.classList.remove("hidden");
+      if (userNameSpan) userNameSpan.textContent = `Olá, ${loggedUser}`;
+    } else {
+      if (loginLink) loginLink.classList.remove("hidden");
+      if (userMenu) userMenu.classList.add("hidden");
+    }
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.reload();
+      });
+    }
+
+    // Mobile
+    const loginFloatBtn = document.getElementById('loginFloatBtn');
+    const logoutFloatBtn = document.getElementById('logoutFloatBtn');
+    if (loginFloatBtn && logoutFloatBtn) {
+      if (loggedUser) {
+        loginFloatBtn.textContent = `Olá, ${loggedUser}`;
+        loginFloatBtn.onclick = null;
+        loginFloatBtn.classList.add('logged');
+        loginFloatBtn.style.background = "#28a745";
+        logoutFloatBtn.style.display = "block";
+        logoutFloatBtn.onclick = () => {
+          localStorage.removeItem("loggedUser");
+          window.location.reload();
+        };
+      } else {
+        loginFloatBtn.textContent = "Entrar";
+        loginFloatBtn.onclick = () => window.location.href='/html/login.html';
+        loginFloatBtn.classList.remove('logged');
+        loginFloatBtn.style.background = "#007bff";
+        logoutFloatBtn.style.display = "none";
+        logoutFloatBtn.onclick = null;
+      }
+    }
+  });
+</script>
+<script>
+  // Menu hamburguer responsivo
+  document.addEventListener("DOMContentLoaded", () => {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const menuLinks = document.getElementById('menuLinks');
+    if (hamburgerBtn && menuLinks) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuLinks.classList.toggle('active');
+        menuLinks.classList.toggle('open');
+      });
+      document.addEventListener('click', function(event) {
+        if (!menuLinks.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+          menuLinks.classList.remove('active');
+          menuLinks.classList.remove('open');
+        }
+      });
+    }
+  });
+</script>
+    </script>
+  </body>
+</html>

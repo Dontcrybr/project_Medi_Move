@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medi Move - Login</title>
+  <link rel="stylesheet" href="/styles/login.css" />
+  <style>
+    /* Só um mini ajuste pra esconder forms */
+    .hidden {
+      display: none;
+    }
+    
+  :root {
+    --bg-color: #f4f8ff;
+    --text-color: #333;
+    --form-bg: #fff;
+    --btn-bg: #0056b3;
+    --btn-text: #fff;
+    --crs-anim: #e3e9f4;
+    --text-anim: #004d99;
+  }
+
+  body.dark-mode {
+    --bg-color: #30303a;
+    --text-color: #e0e0e0;
+    --form-bg: #2c2c3e;
+    --btn-bg: #00366e;
+    --btn-text: #fff;
+    --crs-anim: #173a5fd2;
+    --text-anim: #fff;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .carousel-card {
+    background: var(--crs-anim);
+    color: var(--text-anim);
+  }
+
+  /* ...existing code... */
+body.dark-mode a {
+  color: #28a1f1; /* Escolha a cor desejada */
+}
+body.dark-mode h2 {
+  color: #54abe6; /* Cor clara para o h2 no modo escuro */
+}
+/* ...existing code... */
+
+  .form-box {
+    background-color: var(--form-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  input, select {
+    background-color: #fff;
+    color: #000;
+  }
+
+  body.dark-mode input,
+  body.dark-mode select {
+    background-color: #3a3a52;
+    color: #fff;
+  }
+
+  button {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-theme {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    cursor: pointer;
+  }
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <img src="/imgs/logo sem fundo h.png" alt="Logo Medi Move" class="logo-large" />
+
+      <div class="carousel-container">
+        <div class="carousel-card active">
+          <h3>Missão Medi Move</h3>
+          <p>Conectar pacientes aos hospitais com melhor disponibilidade e rotas rápidas.</p>
+        </div>
+        <div class="carousel-card">
+          <h3>Benefícios</h3>
+          <p>Reduza o tempo de espera e evite trânsito para atendimento emergencial.</p>
+        </div>
+        <div class="carousel-card">
+          <h3>Como Funciona</h3>
+          <p>Mostramos hospitais próximos com vagas disponíveis e a rota mais rápida.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="form-box">
+        <a href="/html/index.html" class="back-home">← Voltar para o início</a>
+        <button class="toggle-theme" id="themeToggle" title="Alternar tema">🌙</button>
+
+        <div class="form-wrapper">
+          <form id="loginForm">
+            <h2>Bem-vindo de volta</h2>
+            <input type="email" name="email" placeholder="E-mail" autocomplete="email" required />
+            <div class="password-wrapper">
+              <input type="password" name="password" id="login_password" placeholder="Senha" autocomplete="new-password" required />
+              <button type="button" class="toggle-password" data-target="login_password" aria-label="Mostrar senha"><img src="/imgs/olho.png" alt=""></button>
+            </div>
+
+            <button type="submit">Entrar</button>
+            <p class="switch-form">Não tem conta? <a href="#" onclick="toggleForm(); return false;">Cadastre-se</a></p>
+            <p id="loginError" style="color:red; display:none;"></p>
+          </form>
+
+          <form id="registerForm" class="hidden">
+            <h2>Criar conta</h2>
+            <input type="text" name="fullname" placeholder="Nome completo" autocomplete="name" required />
+            <input type="email" name="email" placeholder="E-mail" autocomplete="email" required />
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" placeholder="Senha" autocomplete="new-password" required />
+              <button type="button" class="toggle-password" data-target="password" aria-label="Mostrar senha"><img src="/imgs/olho.png" alt=""></button>
+            </div>
+
+            <div class="password-wrapper">
+              <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar senha" autocomplete="new-password" required />
+              <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Mostrar senha"><img src="/imgs/olho.png" alt=""></button>
+            </div>
+
+            <div id="password-strength">
+              <p>Força da senha:</p>
+              <ul>
+                <li id="length" class="invalid">Mínimo 8 caracteres</li>
+                <li id="uppercase" class="invalid">Letra maiúscula</li>
+                <li id="number" class="invalid">Número</li>
+                <li id="special" class="invalid">Caractere especial</li>
+              </ul>
+            </div>
+
+            <button type="submit">Cadastrar</button>
+            <p class="switch-form">Já tem conta? <a href="#" onclick="toggleForm(); return false;">Login</a></p>
+            <p id="registerError" style="color:red; display:none; justify-content:center;"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scripts/login.js"></script>
+  <script src="/scripts/auth.js"></script>
+  <script>
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  function setTheme(isDark) {
+    if (isDark) {
+      body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      body.classList.remove('dark-mode');
+      themeToggle.textContent = '🌙';
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  // Alternar ao clicar
+  themeToggle.addEventListener('click', () => {
+    const isDark = body.classList.contains('dark-mode');
+    setTheme(!isDark);
+  });
+
+  // Carregar tema salvo
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    setTheme(true);
+  }
+</script>
+
+
+</body>
+</html>
