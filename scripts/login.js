@@ -98,7 +98,7 @@ function toggleForm() {
       // Login bem-sucedido
       localStorage.setItem('loggedUser', users[email].name);
       alert('Login realizado com sucesso!');
-      window.location.href = '/html/home.html';
+      window.location.href = '/home.html';
     });
 
     // Cadastro
@@ -142,7 +142,7 @@ function toggleForm() {
 
       localStorage.setItem('loggedUser', fullname);
       alert('Cadastro realizado com sucesso!');
-      window.location.href = '/html/home.html';
+      window.location.href = '/home.html';
     });
 
     function showError(id, msg) {

@@ -47,7 +47,7 @@
       };
     } else {
       loginFloatBtn.textContent = "Entrar";
-      loginFloatBtn.onclick = () => window.location.href='/html/login.html';
+      loginFloatBtn.onclick = () => window.location.href='/login.html';
       loginFloatBtn.classList.remove('logged');
       loginFloatBtn.style.background = "#007bff";
       logoutFloatBtn.style.display = "none";

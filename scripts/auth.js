@@ -28,7 +28,7 @@
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("loggedUser", name); // salva nome para exibir na home
 
-        window.location.href = "/html/home.html";
+        window.location.href = "/home.html";
       });
     }
   });
