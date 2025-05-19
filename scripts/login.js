@@ -102,48 +102,53 @@ function toggleForm() {
     });
 
     // Cadastro
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-      const fullname = this.fullname.value.trim();
-      const email = this.email.value.trim();
-      const password = this.password.value;
-      const confirmPassword = this.confirm_password.value;
+  const fullname = this.fullname.value.trim();
+  const email = this.email.value.trim();
+  const password = this.password.value;
+  const confirmPassword = this.confirm_password.value;
 
-      if (!fullname || !email || !password || !confirmPassword) {
-        showError('registerError', 'Preencha todos os campos.');
-        return;
-      }
+  if (!fullname || !email || !password || !confirmPassword) {
+    showError('registerError', 'Preencha todos os campos.');
+    return;
+  }
 
-      if (password !== confirmPassword) {
-        showError('registerError', 'As senhas não coincidem.');
-        return;
-      }
+  if (password !== confirmPassword) {
+    showError('registerError', 'As senhas não coincidem.');
+    return;
+  }
 
-      // Validar força da senha mínima para cadastro (exemplo: 8 caracteres)
-      if (password.length < 8) {
-        showError('registerError', 'A senha deve ter no mínimo 8 caracteres.');
-        return;
-      }
+  // NOVO: Validação de força da senha
+  if (
+    password.length < 8 ||
+    !/[A-Z]/.test(password) ||
+    !/\d/.test(password) ||
+    !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+  ) {
+    showError('registerError', 'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial.');
+    return;
+  }
 
-      const users = getUsers();
+  const users = getUsers();
 
-      if (users[email]) {
-        showError('registerError', 'Usuário já cadastrado.');
-        return;
-      }
+  if (users[email]) {
+    showError('registerError', 'Usuário já cadastrado.');
+    return;
+  }
 
-      users[email] = {
-        name: fullname,
-        password: password
-      };
+  users[email] = {
+    name: fullname,
+    password: password
+  };
 
-      saveUsers(users);
+  saveUsers(users);
 
-      localStorage.setItem('loggedUser', fullname);
-      alert('Cadastro realizado com sucesso!');
-      window.location.href = '/home.html';
-    });
+  localStorage.setItem('loggedUser', fullname);
+  alert('Cadastro realizado com sucesso!');
+  window.location.href = '/home.html';
+});
 
     function showError(id, msg) {
       const el = document.getElementById(id);

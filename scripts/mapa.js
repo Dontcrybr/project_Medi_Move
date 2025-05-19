@@ -304,3 +304,19 @@ function gerarSuperlotacao() {
   ];
   return niveis[Math.floor(Math.random() * niveis.length)];
 }
+
+let lastScroll = 0;
+const header = document.querySelector('.main-header');
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset;
+  if (currentScroll > lastScroll && currentScroll > 80) {
+    // Descendo: esconde o header
+    header.classList.add('header-hide');
+  } else {
+    // Subindo: mostra o header
+    header.classList.remove('header-hide');
+  }
+  lastScroll = currentScroll;
+});
+
