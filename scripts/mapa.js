@@ -182,21 +182,6 @@ document.getElementById('lista').appendChild(li);
           maisProximo = marker;
         }
       });
-      function calcularDistancia(lat1, lon1, lat2, lon2) {
-  const R = 6371e3;
-  const rad = Math.PI / 180;
-  const φ1 = lat1 * rad, φ2 = lat2 * rad;
-  const Δφ = (lat2 - lat1) * rad;
-  const Δλ = (lon2 - lon1) * rad;
-
-  const a = Math.sin(Δφ / 2) ** 2 +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
-}
-
       if (!maisProximo) {
         alert('Não foi possível encontrar o hospital mais próximo.');
         return;
@@ -319,4 +304,21 @@ window.addEventListener('scroll', () => {
   }
   lastScroll = currentScroll;
 });
+document.addEventListener('DOMContentLoaded', () => {
+  const inputPesquisa = document.getElementById('pesquisa-local');
+  const lista = document.getElementById('lista');
+
+  if (inputPesquisa && lista) {
+    inputPesquisa.addEventListener('input', () => {
+      const termo = inputPesquisa.value.toLowerCase();
+      const itens = lista.querySelectorAll('li');
+
+      itens.forEach(item => {
+        const texto = item.textContent.toLowerCase();
+        item.style.display = texto.includes(termo) ? 'block' : 'none';
+      });
+    });
+  }
+});
+
 
