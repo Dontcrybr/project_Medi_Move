@@ -102,6 +102,85 @@
   .theme-float-btn:hover {
     background: #0056b3;
   }
+  body.dark-mode .search-wrapper {
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+.search-wrapper {
+  position: fixed;
+  top: 180px;
+  left: 48px;
+  height: 50px;
+  width: 50px;
+  background-color: var(--footer-bg);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0 15px;
+  transition: width 0.4s ease, background-color 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.search-wrapper.expanded {
+  width: 350px;
+}
+
+.search-input {
+  display: block;
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 1rem;
+  transform: translateY(15%);
+  background: transparent;
+  color: var(--text-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.search-wrapper.expanded .search-input {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  width: 100%;
+}
+
+.search-btn {
+  display: flex;
+  justify-self: end;
+  transform: translateY(-115%);
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  cursor: pointer;
+   z-index: 1000000;
+}
+
+
+    /* Responsividade */
+    @media (max-width: 500px) {
+      .search-wrapper {
+  position: fixed;
+  top: 160px;
+  left: 25px;
+  height: 50px;
+  width: 50px;
+  background-color: var(--footer-bg);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0 15px;
+  transition: width 0.4s ease, background-color 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+      .search-wrapper.expanded {
+        width: 200px;
+      }
+      }
+  body.dark-mode .modal-content {
+    background: #333;
+    color: #fff;
+  }
 </style>
 
 </head>
@@ -137,80 +216,493 @@
       </nav>
     </header>
 
+    <div class="search-wrapper">
+  <input type="text" id="searchInput" class="search-input" placeholder="Buscar..." />
+  <button class="search-btn" id="searchToggle">
+    <i class="fas fa-search"></i>
+  </button>
+</div>
+
+
   <section class="cards-container">
-    <div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/ana.jpg');"></div>
-      <div class="card-body">
-        <h3>Especialista em Clínica Geral</h3>
-        <p><strong>Dra. Ana Beatriz</strong>, 10 anos de experiência atendendo em hospitais públicos e privados.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/enfermeiro.jpeg');"></div>
-      <div class="card-body">
-        <h3>Ortopedista e Traumatologista</h3>
-        <p><strong>Dr. João Henrique</strong>, referência em pronto atendimento e cirurgias de emergência.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/maria.jpg');"></div>
-      <div class="card-body">
-        <h3>Enfermeira chefe na UPA Centro</h3>
-        <p><strong>Maria Lúcia</strong>, atua com foco em cuidados intensivos e triagem de urgência.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-  <div class="top-curve" style="background-image: url('/imgs/ana.jpg');"></div>
+  <!-- CARD 1 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/mariana.jpg');"></div>
   <div class="card-body">
-    <h3>Clínica Geral</h3>
-    <p><strong>Dra. Ana Beatriz</strong> – 10 anos de experiência atendendo em hospitais públicos e privados.</p>
-    <button class="card-btn">Ver Perfil</button>
+    <h3 class="profissao">Clínico Geral</h3>
+    <p><strong class="nome">Dra. Mariana Torres</strong>, especialista em atendimento domiciliar na Zona Sul de São Paulo.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Mariana Torres',
+      'Clínica Geral • Atendimento Domiciliar – Zona Sul',
+      '⭐ 4.9 de 5 • 200 avaliações',
+      'Oferece consultas em domicílio com foco em mobilidade urbana, atendendo pacientes com dificuldade de locomoção.',
+      'Experiência: 10 anos'
+    )">Ver perfil</button>
   </div>
 </div>
 
-<div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/ana.jpg');"></div>
-      <div class="card-body">
-        <h3>Especialista em Clínica Geral</h3>
-        <p><strong>Dra. Ana Beatriz</strong>, 10 anos de experiência atendendo em hospitais públicos e privados.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/enfermeiro.jpeg');"></div>
-      <div class="card-body">
-        <h3>Ortopedista e Traumatologista</h3>
-        <p><strong>Dr. João Henrique</strong>, referência em pronto atendimento e cirurgias de emergência.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <div class="top-curve" style="background-image: url('/imgs/maria.jpg');"></div>
-      <div class="card-body">
-        <h3>Enfermeira chefe na UPA Centro</h3>
-        <p><strong>Maria Lúcia</strong>, atua com foco em cuidados intensivos e triagem de urgência.</p>
-        <button class="card-btn">Ver Perfil</button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-  <div class="top-curve" style="background-image: url('/imgs/ana.jpg');"></div>
+<!-- CARD 2 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/enfermeiro.jpeg');"></div>
   <div class="card-body">
-    <h3>Clínica Geral</h3>
-    <p><strong>Dra. Ana Beatriz</strong> – 10 anos de experiência atendendo em hospitais públicos e privados.</p>
-    <button class="card-btn">Ver Perfil</button>
+    <h3 class="profissao">Ortopedista</h3>
+    <p><strong class="nome">Dr. João Henrique</strong>, referência em pronto atendimento ortopédico na Zona Leste.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. João Henrique',
+      'Ortopedia • Atendimento em Clínica e Domiciliar – Zona Leste',
+      '⭐ 4.8 de 5 • 180 avaliações',
+      'Especializado em lesões musculoesqueléticas, oferece atendimento em clínica e visitas domiciliares para facilitar o acesso dos pacientes.',
+      'Experiência: 12 anos'
+    )">Ver perfil</button>
   </div>
 </div>
 
-  </section>
+<!-- CARD 3 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/maria.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Enfermeira</h3>
+    <p><strong class="nome">Maria Lúcia</strong>, atua com foco em cuidados intensivos e triagem de urgência na Zona Oeste.</p>
+    <button class="card-btn" onclick="openModal(
+      'Maria Lúcia',
+      'Enfermagem • Atendimento Domiciliar – Zona Oeste',
+      '⭐ 4.7 de 5 • 150 avaliações',
+      'Realiza cuidados intensivos e triagem de urgência em domicílio, proporcionando conforto e acessibilidade aos pacientes.',
+      'Experiência: 8 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 4 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/ana.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Pediatra</h3>
+    <p><strong class="nome">Dra. Ana Beatriz</strong>, atendimento pediátrico domiciliar na região central de São Paulo.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Ana Beatriz',
+      'Pediatria • Atendimento Domiciliar – Centro',
+      '⭐ 4.9 de 5 • 220 avaliações',
+      'Oferece consultas pediátricas em domicílio, facilitando o acesso ao cuidado infantil em áreas de difícil mobilidade.',
+      'Experiência: 9 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 5 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/camila.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Ginecologista</h3>
+    <p><strong class="nome">Dra. Camila Souza</strong>, especializada em saúde da mulher com atendimentos na Zona Norte.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Camila Souza',
+      'Ginecologia • Atendimento em Clínica e Domiciliar – Zona Norte',
+      '⭐ 4.8 de 5 • 190 avaliações',
+      'Atende mulheres em clínica e em domicílio, oferecendo cuidados ginecológicos acessíveis em regiões com desafios de mobilidade.',
+      'Experiência: 11 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+<!-- CARD 6 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/juliana.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Psicóloga</h3>
+    <p><strong class="nome">Dra. Juliana Martins</strong>, atendimento psicológico online e presencial em Pinheiros.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Juliana Martins',
+      'Psicologia Clínica • Online e Presencial – Pinheiros',
+      '⭐ 4.9 de 5 • 250 avaliações',
+      'Atendimento psicológico com foco em acessibilidade e mobilidade reduzida. Oferece sessões online e em consultório de fácil acesso.',
+      'Experiência: 7 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 7 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/cardiologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Cardiologista</h3>
+    <p><strong class="nome">Dr. Ricardo Almeida</strong>, referência em consultas preventivas no Tatuapé.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Ricardo Almeida',
+      'Cardiologia • Clínica e Atendimento Móvel – Tatuapé',
+      '⭐ 4.8 de 5 • 210 avaliações',
+      'Especialista em prevenção de doenças cardiovasculares, com atendimento clínico e visitas a domicílio em áreas de alto tráfego.',
+      'Experiência: 14 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 8 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/leticia.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Fisioterapeuta</h3>
+    <p><strong class="nome">Letícia Ramos</strong>, atendimento em domicílio para reabilitação motora na Zona Norte.</p>
+    <button class="card-btn" onclick="openModal(
+      'Letícia Ramos',
+      'Fisioterapia Domiciliar – Zona Norte',
+      '⭐ 4.7 de 5 • 165 avaliações',
+      'Especializada em reabilitação ortopédica e neurológica com foco na recuperação em casa, ideal para pacientes com baixa mobilidade.',
+      'Experiência: 6 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 9 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/fernanda.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Nutricionista</h3>
+    <p><strong class="nome">Fernanda Oliveira</strong>, acompanhamento nutricional personalizado em Moema.</p>
+    <button class="card-btn" onclick="openModal(
+      'Fernanda Oliveira',
+      'Nutrição • Consultório e Atendimento Online – Moema',
+      '⭐ 4.9 de 5 • 185 avaliações',
+      'Acompanha pacientes com foco em dietas acessíveis e saudáveis, com suporte online e presencial próximo ao metrô.',
+      'Experiência: 8 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 10 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/neurologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Neurologista</h3>
+    <p><strong class="nome">Dr. Felipe Andrade</strong>, atendimento especializado em distúrbios neurológicos na Vila Mariana.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Felipe Andrade',
+      'Neurologia • Clínica e Atendimento a Domicílio – Vila Mariana',
+      '⭐ 4.8 de 5 • 172 avaliações',
+      'Realiza consultas em consultório próximo ao metrô e também oferece visitas domiciliares para pacientes com mobilidade reduzida.',
+      'Experiência: 13 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+<!-- CARD 11 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/oftalmologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Oftalmologista</h3>
+    <p><strong class="nome">Dra. Camila Rezende</strong>, consultas acessíveis próximo ao metrô Santa Cruz.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Camila Rezende',
+      'Oftalmologia • Clínica Visual SP – Santa Cruz',
+      '⭐ 4.7 de 5 • 198 avaliações',
+      'Atendimento rápido para consultas de rotina e urgências oftalmológicas. Fácil acesso via metrô e infraestrutura adaptada.',
+      'Experiência: 11 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 12 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/ginecologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Ginecologista e Obstetra</h3>
+    <p><strong class="nome">Dra. Paula Menezes</strong>, atendimento humanizado em Santo Amaro.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Paula Menezes',
+      'Ginecologia e Obstetrícia • Clínica Vida Mulher – Santo Amaro',
+      '⭐ 4.9 de 5 • 243 avaliações',
+      'Especializada em saúde da mulher, com consultas acessíveis próximas a corredores de ônibus e trens. Atendimento com agilidade e acolhimento.',
+      'Experiência: 12 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 13 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/dermatologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Dermatologista</h3>
+    <p><strong class="nome">Dr. Vinícius Prado</strong>, atua com consultas em áreas centrais como Bela Vista e Liberdade.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Vinícius Prado',
+      'Dermatologia Clínica e Estética • Bela Vista e Liberdade',
+      '⭐ 4.6 de 5 • 159 avaliações',
+      'Consultas rápidas com foco em pele, cabelo e unhas. Locais de fácil acesso e horários estendidos para facilitar deslocamento.',
+      'Experiência: 9 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 14 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/pediatra.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Pediatra</h3>
+    <p><strong class="nome">Dra. Renata Silva</strong>, atendimento infantil domiciliar na Zona Leste de São Paulo.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Renata Silva',
+      'Pediatria • Atendimento a Domicílio – Zona Leste',
+      '⭐ 4.9 de 5 • 188 avaliações',
+      'Realiza consultas pediátricas em domicílio, ideal para pais com dificuldade de locomoção até clínicas e hospitais.',
+      'Experiência: 10 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 15 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/geriatra.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Geriatra</h3>
+    <p><strong class="nome">Dr. Marcelo Tavares</strong>, cuida de idosos com foco em mobilidade reduzida na região do Ipiranga.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Marcelo Tavares',
+      'Geriatria • Clínica do Idoso – Ipiranga',
+      '⭐ 5.0 de 5 • 122 avaliações',
+      'Especializado em cuidados para a terceira idade, com atendimento adaptado a pacientes com dificuldade de locomoção.',
+      'Experiência: 15 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+<!-- CARD 16 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/psicologo.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Psicólogo Clínico</h3>
+    <p><strong class="nome">Dr. Lucas Bernardes</strong>, atua na Av. Paulista com fácil acesso via metrô Consolação.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Lucas Bernardes',
+      'Psicologia Clínica • Paulista e Consolação',
+      '⭐ 4.8 de 5 • 174 avaliações',
+      'Terapia presencial e online voltada ao bem-estar mental com atendimento próximo de estações de metrô e linhas de ônibus.',
+      'Experiência: 8 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 17 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/fonoaudiologo.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Fonoaudióloga</h3>
+    <p><strong class="nome">Dra. Aline Costa</strong>, especializada em reabilitação auditiva na Zona Norte.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Aline Costa',
+      'Fonoaudiologia • Santana',
+      '⭐ 4.9 de 5 • 143 avaliações',
+      'Consultório próximo ao metrô Santana com foco em mobilidade e acesso para pacientes com deficiência auditiva e de fala.',
+      'Experiência: 10 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 18 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/nutricionista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Nutricionista</h3>
+    <p><strong class="nome">Dra. Juliana Martins</strong>, atende na Vila Mariana com opções de consulta online e presencial.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Juliana Martins',
+      'Nutrição Clínica • Vila Mariana',
+      '⭐ 4.7 de 5 • 165 avaliações',
+      'Acompanhamento nutricional com fácil deslocamento e acesso via metrô. Atendimento também por teleconsulta.',
+      'Experiência: 7 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 19 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/terapeuta-ocupacional.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Terapeuta Ocupacional</h3>
+    <p><strong class="nome">Dra. Bianca Lopes</strong>, especializada em acessibilidade funcional na Zona Oeste.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Bianca Lopes',
+      'Terapia Ocupacional • Lapa',
+      '⭐ 4.8 de 5 • 122 avaliações',
+      'Ajuda pacientes a desenvolverem autonomia em ambientes urbanos com locomoção limitada. Fácil acesso por CPTM.',
+      'Experiência: 9 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 20 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/psiquiatra.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Psiquiatra</h3>
+    <p><strong class="nome">Dr. Henrique Vasconcellos</strong>, especialista em saúde mental com clínica próxima ao metrô Tatuapé.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Henrique Vasconcellos',
+      'Psiquiatria • Clínica Vita Mente – Tatuapé',
+      '⭐ 4.6 de 5 • 191 avaliações',
+      'Atendimento humanizado com foco em transtornos modernos e acessibilidade urbana, próximo ao terminal Tatuapé.',
+      'Experiência: 13 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+<!-- CARD 21 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/ginecologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Ginecologista</h3>
+    <p><strong class="nome">Dra. Camila Ferreira</strong>, atendimento acessível e humanizado na Zona Sul de São Paulo.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Camila Ferreira',
+      'Ginecologia e Obstetrícia • Santo Amaro',
+      '⭐ 4.9 de 5 • 188 avaliações',
+      'Clínica próxima ao terminal Largo Treze, com foco em atendimento feminino e deslocamento facilitado para gestantes.',
+      'Experiência: 11 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 22 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/oftalmologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Oftalmologista</h3>
+    <p><strong class="nome">Dr. Fábio Meirelles</strong>, referência em cuidados com a visão com fácil acesso na região central.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Fábio Meirelles',
+      'Oftalmologia • República',
+      '⭐ 4.7 de 5 • 157 avaliações',
+      'Consultas e exames oftalmológicos em clínica próxima ao metrô República. Opções de horários estendidos para facilitar o deslocamento.',
+      'Experiência: 14 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 23 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/dermatologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Dermatologista</h3>
+    <p><strong class="nome">Dra. Paula Albuquerque</strong>, atende na Mooca com foco em mobilidade e acessibilidade urbana.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Paula Albuquerque',
+      'Dermatologia Clínica • Mooca',
+      '⭐ 4.8 de 5 • 169 avaliações',
+      'Especialista em tratamentos dermatológicos com clínica próxima à estação Juventus-Mooca e linhas de ônibus.',
+      'Experiência: 10 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 24 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/endocrinologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Endocrinologista</h3>
+    <p><strong class="nome">Dr. Rafael Siqueira</strong>, especializado em doenças metabólicas, com clínica acessível em Pinheiros.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Rafael Siqueira',
+      'Endocrinologia • Pinheiros',
+      '⭐ 4.9 de 5 • 178 avaliações',
+      'Foco em doenças hormonais e metabólicas, com consultório próximo à estação Faria Lima. Facilidade para deslocamento de pacientes com limitações físicas.',
+      'Experiência: 12 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 25 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/infectologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Infectologista</h3>
+    <p><strong class="nome">Dra. Renata Oliveira</strong>, referência em prevenção de doenças infecciosas com foco em mobilidade urbana.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Renata Oliveira',
+      'Infectologia • Barra Funda',
+      '⭐ 4.8 de 5 • 144 avaliações',
+      'Atendimento preventivo e diagnóstico próximo ao terminal Barra Funda. Facilita o acesso a grupos de risco e idosos.',
+      'Experiência: 9 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+<!-- CARD 26 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/psiquiatra.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Psiquiatra</h3>
+    <p><strong class="nome">Dr. Eduardo Nascimento</strong>, oferece suporte emocional com fácil acesso na região da Lapa.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Eduardo Nascimento',
+      'Psiquiatria • Lapa',
+      '⭐ 4.9 de 5 • 196 avaliações',
+      'Atendimento em saúde mental com clínica próxima ao terminal Lapa. Prioriza conforto e acessibilidade para pacientes em tratamento contínuo.',
+      'Experiência: 13 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 27 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/geriatra.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Geriatra</h3>
+    <p><strong class="nome">Dra. Lúcia Andrade</strong>, especializada em cuidados com idosos na Zona Leste de São Paulo.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Lúcia Andrade',
+      'Geriatria • Tatuapé',
+      '⭐ 5.0 de 5 • 212 avaliações',
+      'Atendimento humanizado e com deslocamento facilitado para idosos e cuidadores. Próxima à estação Carrão.',
+      'Experiência: 16 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 28 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/alergologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Alergologista</h3>
+    <p><strong class="nome">Dr. Vinícius Prado</strong>, atua na região de Perdizes com foco em mobilidade e prevenção.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Vinícius Prado',
+      'Alergologia e Imunologia • Perdizes',
+      '⭐ 4.7 de 5 • 130 avaliações',
+      'Clínica próxima ao metrô Sumaré. Atendimento rápido para alergias respiratórias comuns em centros urbanos.',
+      'Experiência: 8 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 29 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/nutricionista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Nutricionista</h3>
+    <p><strong class="nome">Dra. Juliana Neves</strong>, atendimento prático e acessível na região da Vila Mariana.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dra. Juliana Neves',
+      'Nutrição Clínica e Funcional • Vila Mariana',
+      '⭐ 4.9 de 5 • 175 avaliações',
+      'Consultório próximo à estação Ana Rosa. Atendimento focado em reeducação alimentar e mobilidade urbana.',
+      'Experiência: 10 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+<!-- CARD 30 -->
+<div class="custom-card medico-card">
+  <div class="top-curve" style="background-image: url('/imgs/oncologista.jpg');"></div>
+  <div class="card-body">
+    <h3 class="profissao">Oncologista</h3>
+    <p><strong class="nome">Dr. Marcelo Torres</strong>, tratamento oncológico com acesso facilitado na Zona Norte.</p>
+    <button class="card-btn" onclick="openModal(
+      'Dr. Marcelo Torres',
+      'Oncologia Clínica • Santana',
+      '⭐ 5.0 de 5 • 204 avaliações',
+      'Referência em cuidado oncológico com estrutura adaptada para pacientes com mobilidade reduzida. Fácil acesso via metrô Santana.',
+      'Experiência: 18 anos'
+    )">Ver perfil</button>
+  </div>
+</div>
+
+
+</section>
+
  <footer class="main-footer">
       <div class="footer-container">
         <div class="footer-logo">
@@ -242,6 +734,20 @@
         </div>
       </div>
     </footer>
+    <!-- Modal de Perfil -->
+<div id="profileModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <h2 id="modalName">Dr. João Silva</h2>
+    <p class="modal-profissao">Ortopedista • Emergência Móvel</p>
+    <p class="modal-avaliacao">⭐ 4.8 de 5 • 120 avaliações</p>
+    <p class="modal-descricao">
+      Profissional focado em mobilidade, especializado em atendimentos emergenciais com deslocamento rápido.
+    </p>
+    <p class="modal-experiencia">Experiência: 12 anos</p>
+  </div>
+</div>
+
     <!-- Botão flutuante de login/logout para mobile -->
     <button class="login-float-btn" id="loginFloatBtn">Entrar</button>
     <button class="logout-float-btn" id="logoutFloatBtn" style="display:none;">Sair</button>
@@ -290,7 +796,59 @@ const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'dark') {
   setTheme(true);
 }
+
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const searchToggle = document.getElementById('searchToggle');
+  const searchWrapper = document.querySelector('.search-wrapper');
+  const searchInput = document.querySelector('.search-input');
+
+  // Toggle ao clicar no botão de busca
+  searchToggle.addEventListener('click', (e) => {
+    e.stopPropagation(); // Evita que o clique propague para o document
+    searchWrapper.classList.toggle('expanded');
+    if (searchWrapper.classList.contains('expanded')) {
+      searchInput.focus();
+    }
+  });
+
+  // Fechar ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!searchWrapper.contains(e.target)) {
+      searchWrapper.classList.remove('expanded');
+    }
+  });
+
+  // Previne que clique dentro da barra a feche
+  searchWrapper.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+});
+
+</script>
+<script>
+  // Lógica da busca
+  const searchInput = document.getElementById('searchInput');
+  const searchToggle = document.getElementById('searchToggle');
+  const searchWrapper = document.querySelector('.search-wrapper');
+
+
+  // Filtra os cards por nome ou profissão enquanto o usuário digita
+  searchInput.addEventListener('input', () => {
+    const filter = searchInput.value.toLowerCase();
+    const cards = document.querySelectorAll('.medico-card');
+
+    cards.forEach(card => {
+      const nome = card.querySelector('.nome')?.textContent.toLowerCase() || '';
+      const profissao = card.querySelector('.profissao')?.textContent.toLowerCase() || '';
+
+      const corresponde = nome.includes(filter) || profissao.includes(filter);
+      card.style.display = corresponde ? 'flex' : 'none';
+    });
+  });
+</script>
+
 <script>
 let lastScroll = 0;
 const header = document.querySelector('.main-header');
@@ -306,7 +864,28 @@ window.addEventListener('scroll', () => {
   }
   lastScroll = currentScroll;
 });
+function openModal(nome, profissao, avaliacao, descricao, experiencia) {
+  document.getElementById("modalName").textContent = nome;
+  document.querySelector(".modal-profissao").textContent = profissao;
+  document.querySelector(".modal-avaliacao").textContent = avaliacao;
+  document.querySelector(".modal-descricao").textContent = descricao;
+  document.querySelector(".modal-experiencia").textContent = experiencia;
+
+  document.getElementById("profileModal").classList.remove("hidden");
+}
+
+// Fecha modal ao clicar fora
+document.getElementById("profileModal").addEventListener("click", function (e) {
+  if (e.target === this) {
+    closeModal();
+  }
+});
+
+function closeModal() {
+  document.getElementById("profileModal").classList.add("hidden");
+}
 </script>
+
     
 <script src="/scripts/medicos.js"></script>
 <script src="/scripts/home.js"></script>
