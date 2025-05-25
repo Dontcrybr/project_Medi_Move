@@ -259,6 +259,10 @@ function handleCredentialResponse(response) {
   // Redirecionar para a home
   window.location.href = "/home.html"; // ou o caminho da sua home
 }
+const userName = getGoogleUserName();
+if (userName) {
+  document.getElementById('nomeUsuario').textContent = userName;
+}
 function getGoogleUserName() {
   const token = localStorage.getItem('google_token');
   if (!token) return null;

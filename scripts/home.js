@@ -7,53 +7,50 @@
         }
       });
   
- document.addEventListener("DOMContentLoaded", () => {
+ function getGoogleUserName() {
+  const token = localStorage.getItem('google_token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.given_name || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
   // DESKTOP
   const loginLink = document.getElementById("login-link");
   const userMenu = document.getElementById("user-menu");
   const userNameSpan = document.getElementById("user-name");
+  const nomeUsuario = document.getElementById('nomeUsuario');
   const logoutBtn = document.getElementById("logout-btn");
   const loggedUser = localStorage.getItem("loggedUser");
+  const googleUserName = getGoogleUserName();
 
-  if (loggedUser) {
+  if (googleUserName) {
+    if (loginLink) loginLink.classList.add("hidden");
+    if (userMenu) userMenu.classList.remove("hidden");
+    if (userNameSpan) userNameSpan.textContent = `Olá, ${googleUserName}`;
+    if (nomeUsuario) nomeUsuario.textContent = googleUserName;
+  } else if (loggedUser) {
     if (loginLink) loginLink.classList.add("hidden");
     if (userMenu) userMenu.classList.remove("hidden");
     if (userNameSpan) userNameSpan.textContent = `Olá, ${loggedUser}`;
+    if (nomeUsuario) nomeUsuario.textContent = loggedUser;
   } else {
     if (loginLink) loginLink.classList.remove("hidden");
     if (userMenu) userMenu.classList.add("hidden");
   }
+
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("loggedUser");
+      localStorage.removeItem("google_token");
       window.location.reload();
     });
   }
 
-  // MOBILE
-  const loginFloatBtn = document.getElementById('loginFloatBtn');
-  const logoutFloatBtn = document.getElementById('logoutFloatBtn');
-
-  if (loginFloatBtn && logoutFloatBtn) {
-    if (loggedUser) {
-      loginFloatBtn.textContent = `Olá, ${loggedUser}`;
-      loginFloatBtn.onclick = null;
-      loginFloatBtn.classList.add('logged');
-      loginFloatBtn.style.background = "#28a745";
-      logoutFloatBtn.style.display = "block";
-      logoutFloatBtn.onclick = () => {
-        localStorage.removeItem("loggedUser");
-        window.location.reload();
-      };
-    } else {
-      loginFloatBtn.textContent = "Entrar";
-      loginFloatBtn.onclick = () => window.location.href='/login.html';
-      loginFloatBtn.classList.remove('logged');
-      loginFloatBtn.style.background = "#007bff";
-      logoutFloatBtn.style.display = "none";
-    }
-  }
-});
 
   document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
@@ -91,7 +88,7 @@ document.addEventListener('click', function(event) {
     menuLinks.classList.remove('open');
   }
 });
-
+});
 
 
 
