@@ -28,16 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const loggedUser = localStorage.getItem("loggedUser");
   const googleUserName = getGoogleUserName();
 
-  if (googleUserName) {
+  // MOBILE
+  const loginFloatBtn = document.getElementById('loginFloatBtn');
+  const logoutFloatBtn = document.getElementById('logoutFloatBtn');
+
+  // Lógica para nome do usuário (Google ou tradicional)
+  let nomeParaMostrar = googleUserName || loggedUser;
+
+  // Desktop
+  if (nomeParaMostrar) {
     if (loginLink) loginLink.classList.add("hidden");
     if (userMenu) userMenu.classList.remove("hidden");
-    if (userNameSpan) userNameSpan.textContent = `Olá, ${googleUserName}`;
-    if (nomeUsuario) nomeUsuario.textContent = googleUserName;
-  } else if (loggedUser) {
-    if (loginLink) loginLink.classList.add("hidden");
-    if (userMenu) userMenu.classList.remove("hidden");
-    if (userNameSpan) userNameSpan.textContent = `Olá, ${loggedUser}`;
-    if (nomeUsuario) nomeUsuario.textContent = loggedUser;
+    if (userNameSpan) userNameSpan.textContent = `Olá, ${nomeParaMostrar}`;
+    if (nomeUsuario) nomeUsuario.textContent = nomeParaMostrar;
   } else {
     if (loginLink) loginLink.classList.remove("hidden");
     if (userMenu) userMenu.classList.add("hidden");
@@ -49,6 +52,28 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("google_token");
       window.location.reload();
     });
+  }
+
+  // Mobile
+  if (loginFloatBtn && logoutFloatBtn) {
+    if (nomeParaMostrar) {
+      loginFloatBtn.textContent = `Olá, ${nomeParaMostrar}`;
+      loginFloatBtn.onclick = null;
+      loginFloatBtn.classList.add('logged');
+      loginFloatBtn.style.background = "#28a745";
+      logoutFloatBtn.style.display = "block";
+      logoutFloatBtn.onclick = () => {
+        localStorage.removeItem("loggedUser");
+        localStorage.removeItem("google_token");
+        window.location.reload();
+      };
+    } else {
+      loginFloatBtn.textContent = "Entrar";
+      loginFloatBtn.onclick = () => window.location.href='/login.html';
+      loginFloatBtn.classList.remove('logged');
+      loginFloatBtn.style.background = "#007bff";
+      logoutFloatBtn.style.display = "none";
+    }
   }
 });
 
