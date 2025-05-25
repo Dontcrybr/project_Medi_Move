@@ -12,7 +12,6 @@
   const loginLink = document.getElementById("login-link");
   const userMenu = document.getElementById("user-menu");
   const userNameSpan = document.getElementById("user-name");
-  const userName = getGoogleUserName();
   const logoutBtn = document.getElementById("logout-btn");
   const loggedUser = localStorage.getItem("loggedUser");
 
@@ -20,9 +19,6 @@
     if (loginLink) loginLink.classList.add("hidden");
     if (userMenu) userMenu.classList.remove("hidden");
     if (userNameSpan) userNameSpan.textContent = `Olá, ${loggedUser}`;
-    if (userName) {
-  document.getElementById('nomeUsuario').textContent = userName;
-}
   } else {
     if (loginLink) loginLink.classList.remove("hidden");
     if (userMenu) userMenu.classList.add("hidden");
