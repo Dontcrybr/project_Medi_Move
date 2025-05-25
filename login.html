@@ -234,12 +234,14 @@ body.dark-mode h2 {
 <script>
 function handleCredentialResponse(response) {
   // Aqui você recebe o token JWT do Google
-  // Você pode enviar para seu backend ou usar direto
-  // Exemplo: mostrar o token (remova em produção)
-  console.log("ID Token Google:", response.credential);
+  // Você pode enviar para seu backend para autenticar o usuário
+  // ou, para testes, apenas redirecionar para a home:
 
-  // Exemplo: redirecionar ou autenticar no seu sistema
-  // window.location.href = "/dashboard.html";
+  // Salvar o token no localStorage (opcional)
+  localStorage.setItem('google_token', response.credential);
+
+  // Redirecionar para a home
+  window.location.href = "/home.html"; // ou o caminho da sua home
 }
 </script>
 
