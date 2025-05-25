@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.reload();
     });
   }
-
+});
 
   document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
@@ -88,7 +88,7 @@ document.addEventListener('click', function(event) {
     menuLinks.classList.remove('open');
   }
 });
-});
+
 
 
 
