@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MediMove - Home</title>
-    <link rel="stylesheet" href="/styles/home.css" />
+    <link rel="stylesheet" href="/styles/consulta.css" />
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -95,8 +95,23 @@
     body.dark-mode #themeToggle {
       background-color: #004794;
     }
+    body.dark-mode .consulta-main {
+      background-color: #2c2c3e;
+      color: #e0e0e0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .consulta-main .btn-buscar{
+      color: #000000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .consulta-main .btn-buscar:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+    body.dark-mode input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
  
-
     /* Tema escuro */
     .toggle-theme {
       background: none;
@@ -143,9 +158,8 @@
     <i class="fa fa-bars"></i>
   </button>
         <ul class="menu-links">
-          <li><a href="#">Home</a></li>
+          <li><a href="/home.html">Home</a></li>
           <li><a href="/mapa.html">Mapa</a></li>
-          <li><a href="#sobre">Sobre Nós</a></li>
           <li><a href="/medicos.html">Médicos</a></li>
           <li><a href="/consulta.html">Consulta</a></li>
           <li><a href="#">Hospitais</a></li>
@@ -164,49 +178,99 @@
       </nav>
     </header>
 
-    <main>
-      <section class="hero">
-        <h2>Bem-vindo ao MediMove</h2>
-        <p>Conectando você aos hospitais com mais eficiência e rapidez.</p>
-      </section>
-      <section class="sobre-nos" id="sobre">
-        <div class="sobre-container">
-          <div class="sobre-texto">
-            <h2 id="sobreid">Sobre o MediMove</h2>
-            <h3>Missão</h3>
-            <p>Conectar pessoas aos hospitais com mais disponibilidade e rotas
-              rápidas, salvando vidas com tecnologia e agilidade.</p>
-            <h3>Visão</h3>
-            <p>Ser referência em mobilidade hospitalar no Brasil, integrando
-              saúde, tecnologia e acessibilidade até 2030.</p>
-            <h3>Valores</h3>
-            <ul>
-              <li>Empatia</li>
-              <li>Inovação</li>
-              <li>Transparência</li>
-              <li>Compromisso com a vida</li>
-            </ul>
-            <h3>Como surgiu?</h3>
-            <p>
-              Em momentos de emergência, percebemos como é difícil saber para
-              qual hospital ir. O MediMove nasceu da vontade de usar a
-              tecnologia para salvar tempo e vidas.
-            </p>
-            <h3>Nosso Time</h3>
-            <ul>
-              <li>Miguel Pereira – Desenvolvedor Full Stack</li>
-              <li>Leonardo Lopes – UX/UI Designer</li>
-              <li>Álvaro Emanuel – Analista de Dados</li>
-              <li>Dioni Alves – Gerente de Projetos</li>
-            </ul>
-          </div>
-          <div class="sobre-imagem">
-            <img src="/imgs/time_trabalhando.jpg"
-              alt="Equipe do MediMove trabalhando" />
-          </div>
+    <!-- Área principal da consulta inteligente -->
+<main class="consulta-main">
+  <section class="consulta-form-section">
+    <h2>Agende sua Consulta com Mobilidade</h2>
+    <form id="consulta-form" autocomplete="off">
+      <div class="form-group">
+        <label for="localizacao">
+          <i class="fa fa-location-dot"></i> Sua localização
+        </label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="localizacao" name="localizacao" placeholder="Detectando localização..." required style="flex:1;">
+          <button type="button" id="btn-localizacao" title="Usar localização atual" style="min-width:44px;">
+            <i class="fa fa-crosshairs"></i>
+          </button>
         </div>
-      </section>
-    </main>
+      </div>
+      <div class="form-group">
+        <label for="especialidade">
+          <i class="fa fa-user-doctor"></i> Especialidade
+        </label>
+        <select id="especialidade" name="especialidade" required>
+  <option value="">Selecione...</option>
+  <option value="clinico">Clínico Geral</option>
+  <option value="pediatra">Pediatra</option>
+  <option value="cardiologista">Cardiologista</option>
+  <option value="ortopedista">Ortopedista</option>
+  <option value="ginecologista">Ginecologista</option>
+  <option value="enfermeira">Enfermeira</option>
+  <option value="fisioterapeuta">Fisioterapeuta</option>
+  <option value="nutricionista">Nutricionista</option>
+  <option value="neurologista">Neurologista</option>
+  <option value="oftalmologista">Oftalmologista</option>
+  <option value="dermatologista">Dermatologista</option>
+  <option value="geriatra">Geriatra</option>
+  <option value="psicologa">Psicóloga</option>
+  <option value="psicologo">Psicólogo Clínico</option>
+  <option value="fonoaudiologa">Fonoaudióloga</option>
+  <option value="terapeuta_ocupacional">Terapeuta Ocupacional</option>
+  <option value="psiquiatra">Psiquiatra</option>
+  <option value="endocrinologista">Endocrinologista</option>
+  <option value="infectologista">Infectologista</option>
+  <option value="alergologista">Alergologista</option>
+  <option value="oncologista">Oncologista</option>
+</select>
+      </div>
+      <div class="form-group">
+        <label for="mobilidade">
+          <i class="fa fa-bus"></i> Mobilidade
+        </label>
+        <select id="mobilidade" name="mobilidade" required>
+          <option value="">Selecione...</option>
+          <option value="carro">Carro</option>
+          <option value="transporte_publico">Transporte Público</option>
+          <option value="onibus">Ônibus</option>
+          <option value="metro">Metrô</option>
+          <option value="bicicleta">Bicicleta</option>
+          <option value="a_pe">A pé</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="horario">
+          <i class="fa fa-calendar"></i> Data e horário desejado
+        </label>
+        <input type="datetime-local" id="horario" name="horario" required>
+      </div>
+      <div class="form-group">
+        <label for="preferencias">
+          <i class="fa fa-sliders"></i> Preferências (opcional)
+        </label>
+        <textarea id="preferencias" name="preferencias" rows="2" placeholder="Ex: hospital com acessibilidade, médico mulher, etc."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-buscar">
+          <i class="fa fa-magnifying-glass"></i> Buscar Consulta
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Resultados simulados -->
+  <section id="resultados-consulta" style="display:none;">
+    <h3>Resultados encontrados</h3>
+    <div id="cards-resultados">
+      <!-- Cards de médicos/hospitais serão inseridos aqui via JS -->
+    </div>
+  </section>
+
+  <!-- Mensagem de sucesso -->
+  <div id="mensagem-sucesso" class="mensagem-sucesso" style="display:none;">
+    <i class="fa fa-check-circle"></i>
+    Consulta agendada com sucesso!
+  </div>
+</main>
 
     <footer class="main-footer">
       <div class="footer-container">
@@ -307,5 +371,6 @@ window.addEventListener('scroll', () => {
 </script>
   
     <script src="/scripts/home.js"></script>
+    <script src="/scripts/consulta.js"></script>
   </body>
 </html>
