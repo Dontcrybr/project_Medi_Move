@@ -246,53 +246,76 @@
 </script>
 <script>
   // Login/logout igual home
-  document.addEventListener("DOMContentLoaded", () => {
-    // Desktop
-    const loginLink = document.getElementById("login-link");
-    const userMenu = document.getElementById("user-menu");
-    const userNameSpan = document.getElementById("user-name");
-    const logoutBtn = document.getElementById("logout-btn");
-    const loggedUser = localStorage.getItem("loggedUser");
+  function getGoogleUserName() {
+  const token = localStorage.getItem('google_token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.given_name || null;
+  } catch (e) {
+    return null;
+  }
+}
 
-    if (loggedUser) {
-      if (loginLink) loginLink.classList.add("hidden");
-      if (userMenu) userMenu.classList.remove("hidden");
-      if (userNameSpan) userNameSpan.textContent = `Olá, ${loggedUser}`;
-    } else {
-      if (loginLink) loginLink.classList.remove("hidden");
-      if (userMenu) userMenu.classList.add("hidden");
-    }
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
+document.addEventListener("DOMContentLoaded", () => {
+  // DESKTOP
+  const loginLink = document.getElementById("login-link");
+  const userMenu = document.getElementById("user-menu");
+  const userNameSpan = document.getElementById("user-name");
+  const nomeUsuario = document.getElementById('nomeUsuario');
+  const logoutBtn = document.getElementById("logout-btn");
+  const loggedUser = localStorage.getItem("loggedUser");
+  const googleUserName = getGoogleUserName();
+
+  // MOBILE
+  const loginFloatBtn = document.getElementById('loginFloatBtn');
+  const logoutFloatBtn = document.getElementById('logoutFloatBtn');
+
+  // Lógica para nome do usuário (Google ou tradicional)
+  let nomeParaMostrar = googleUserName || loggedUser;
+
+  // Desktop
+  if (nomeParaMostrar) {
+    if (loginLink) loginLink.classList.add("hidden");
+    if (userMenu) userMenu.classList.remove("hidden");
+    if (userNameSpan) userNameSpan.textContent = `Olá, ${nomeParaMostrar}`;
+    if (nomeUsuario) nomeUsuario.textContent = nomeParaMostrar;
+  } else {
+    if (loginLink) loginLink.classList.remove("hidden");
+    if (userMenu) userMenu.classList.add("hidden");
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("loggedUser");
+      localStorage.removeItem("google_token");
+      window.location.reload();
+    });
+  }
+
+  // Mobile
+  if (loginFloatBtn && logoutFloatBtn) {
+    if (nomeParaMostrar) {
+      loginFloatBtn.textContent = `Olá, ${nomeParaMostrar}`;
+      loginFloatBtn.onclick = null;
+      loginFloatBtn.classList.add('logged');
+      loginFloatBtn.style.background = "#28a745";
+      logoutFloatBtn.style.display = "block";
+      logoutFloatBtn.onclick = () => {
         localStorage.removeItem("loggedUser");
+        localStorage.removeItem("google_token");
         window.location.reload();
-      });
+      };
+    } else {
+      loginFloatBtn.textContent = "Entrar";
+      loginFloatBtn.onclick = () => window.location.href='/login.html';
+      loginFloatBtn.classList.remove('logged');
+      loginFloatBtn.style.background = "#007bff";
+      logoutFloatBtn.style.display = "none";
     }
-
-    // Mobile
-    const loginFloatBtn = document.getElementById('loginFloatBtn');
-    const logoutFloatBtn = document.getElementById('logoutFloatBtn');
-    if (loginFloatBtn && logoutFloatBtn) {
-      if (loggedUser) {
-        loginFloatBtn.textContent = `Olá, ${loggedUser}`;
-        loginFloatBtn.onclick = null;
-        loginFloatBtn.classList.add('logged');
-        loginFloatBtn.style.background = "#28a745";
-        logoutFloatBtn.style.display = "block";
-        logoutFloatBtn.onclick = () => {
-          localStorage.removeItem("loggedUser");
-          window.location.reload();
-        };
-      } else {
-        loginFloatBtn.textContent = "Entrar";
-        loginFloatBtn.onclick = () => window.location.href='/login.html';
-        loginFloatBtn.classList.remove('logged');
-        loginFloatBtn.style.background = "#007bff";
-        logoutFloatBtn.style.display = "none";
-        logoutFloatBtn.onclick = null;
-      }
-    }
-  });
+  }
+  
+});
   
 </script>
 <script>
@@ -335,16 +358,7 @@ function getDistance(coord1, coord2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   return R * c;
 }
-function getGoogleUserName() {
-  const token = localStorage.getItem('google_token');
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.name || payload.given_name || null;
-  } catch (e) {
-    return null;
-  }
-}
+
 </script>
 
     </script>
