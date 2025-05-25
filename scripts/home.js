@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutFloatBtn.style.display = "none";
     }
   }
+  
 });
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -113,7 +114,16 @@ document.addEventListener('click', function(event) {
     menuLinks.classList.remove('open');
   }
 });
-
+function getGoogleUserName() {
+  const token = localStorage.getItem('google_token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.given_name || null;
+  } catch (e) {
+    return null;
+  }
+}
 
 
 
