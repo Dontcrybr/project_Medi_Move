@@ -259,7 +259,18 @@ function handleCredentialResponse(response) {
   // Redirecionar para a home
   window.location.href = "/home.html"; // ou o caminho da sua home
 }
+function getGoogleUserName() {
+  const token = localStorage.getItem('google_token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.given_name || null;
+  } catch (e) {
+    return null;
+  }
+}
 </script>
+
 
   </body>
 </html>
