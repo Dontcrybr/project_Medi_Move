@@ -186,6 +186,7 @@
           style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">
           Rota para o local mais próximo
         </button>
+        <button id="btnRota" style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">Rota mais proxima e menos superlotada</button>
         <button id="limpar-rotas"
           style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">
           Limpar Rota</button>
@@ -292,6 +293,7 @@
       }
     }
   });
+  
 </script>
 <script>
   // Menu hamburguer responsivo
@@ -312,7 +314,27 @@
       });
     }
   });
-  
+  function getBestHospital(hospitais) {
+  return hospitais.reduce((melhor, atual) => {
+    const scoreAtual = atual.distancia * 1 + atual.lotacao * 2;
+    const scoreMelhor = melhor.distancia * 1 + melhor.lotacao * 2;
+    return scoreAtual < scoreMelhor ? atual : melhor;
+  });
+}
+
+// Função para calcular distância usando fórmula de Haversine
+function getDistance(coord1, coord2) {
+  const R = 6371; // Raio da Terra em km
+  const dLat = (coord2.lat - coord1.lat) * Math.PI / 180;
+  const dLon = (coord2.lng - coord1.lng) * Math.PI / 180;
+  const lat1 = coord1.lat * Math.PI / 180;
+  const lat2 = coord2.lat * Math.PI / 180;
+
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return R * c;
+}
 </script>
 
     </script>

@@ -49,14 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeRoutes = [];
 
     function limparRotas() {
+      
       activeRoutes.forEach(route => map.removeControl(route));
       activeRoutes = [];
+      
     }
 
     async function buscarLocais(tipo) {
       currentMarkers.forEach(marker => map.removeLayer(marker));
       currentMarkers = [];
       document.getElementById('lista').innerHTML = '';
+      
 
       limparRotas();
 
@@ -84,13 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
          // ...dentro do forEach dos locais...
 const superlotacao = gerarSuperlotacao();
 
-const marker = L.marker([local.lat, local.lon], { icon })
+const marker = L.marker([local.lat, local.lon], { icon, superlotacao  })
   .addTo(map)
   .bindPopup(`<b>${name}</b><br>
     <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
       ${superlotacao.texto}
     </span><br>
     Clique no marcador para traçar rota.`);
+    marker.bindTooltip(`<b>${name}</b><br>
+    <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
+      ${superlotacao.texto}
+    </span><br>
+    Clique no marcador para traçar rota.`, {
+  direction: 'top',
+  offset: [0, -10],
+  opacity: 0.9
+});
 marker.on('click', async () => {
   limparRotas();
 
@@ -164,54 +176,166 @@ document.getElementById('lista').appendChild(li);
       buscarLocais(e.target.value);
     });
 
-    document.getElementById('rota-mais-proxima').addEventListener('click', () => {
-      if (!currentMarkers.length) {
-        alert('Nenhum local carregado ainda.');
-        return;
-      }
+    
+      document.getElementById('btnRota').addEventListener('click', async () => {
+  if (!currentMarkers.length) {
+    alert('Nenhum local carregado ainda.');
+    return;
+  }
+
+  let melhorMarker = null;
+  let melhorScore = Infinity;
+
+  currentMarkers.forEach(marker => {
+    const { lat: latM, lng: lonM } = marker.getLatLng();
+    const distancia = calcularDistancia(lat, lon, latM, lonM);
+    
+
+    // Nível: baixa=0, media=1, alta=2
+    let lotacao = 2;
+    if (marker.options.superlotacao?.nivel === "baixa") lotacao = 0;
+    else if (marker.options.superlotacao?.nivel === "media") lotacao = 1;
+
+    // Score: prioriza menos lotado, depois mais perto
+    const score = lotacao * 100000 + distancia;
+
+    if (score < melhorScore) {
+      melhorScore = score;
+      melhorMarker = marker;
+    }
+    
+  });
+
+  if (!melhorMarker) {
+    alert('Não foi possível encontrar o local ideal.');
+    return;
+  }
+
+  limparRotas();
+
+  const destino = melhorMarker.getLatLng();
+  const distancia = Math.round(calcularDistancia(lat, lon, destino.lat, destino.lng));
+  let superlotacao = melhorMarker.options.superlotacao;
+  let name = melhorMarker.getPopup().getContent().match(/<b>(.*?)<\/b>/)?.[1] || "Estabelecimento de saúde";
+
+  // Traça a rota
+  const rota = L.Routing.control({
+    waypoints: [L.latLng(lat, lon), destino],
+    routeWhileDragging: false,
+    show: false,
+    addWaypoints: false,
+    lineOptions: {
+      styles: [{ color: 'orange', weight: 5 }]
+    },
+    createMarker: () => null
+  }).addTo(map);
+
+  activeRoutes.push(rota);
+  map.setView(destino, 15);
+
+  // Busca tempo de carro e mostra popup
+  try {
+    const tempoCarro = await getCarTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng });
+    melhorMarker.bindPopup(
+      `<b>${name}</b><br>
+      <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Tempo de carro: <b>${tempoCarro}</b><br>
+      <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
+    );
+    melhorMarker.openPopup();
+  } catch (e) {
+    melhorMarker.bindPopup(
+      `<b>${name}</b><br>
+      <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Não foi possível calcular o tempo de viagem.`
+    );
+    melhorMarker.openPopup();
+  }
+});
       document.getElementById('limpar-rotas').addEventListener('click', limparRotas);
 
-      let maisProximo = null;
-      let menorDistancia = Infinity;
+     document.getElementById('rota-mais-proxima').addEventListener('click', async () => {
+  if (!currentMarkers.length) {
+    alert('Nenhum local carregado ainda.');
+    return;
+  }
 
-      currentMarkers.forEach(marker => {
-        const { lat: latM, lng: lonM } = marker.getLatLng();
-        const distancia = calcularDistancia(lat, lon, latM, lonM);
-        if (distancia < menorDistancia) {
-          menorDistancia = distancia;
-          maisProximo = marker;
-        }
-      });
-      if (!maisProximo) {
-        alert('Não foi possível encontrar o hospital mais próximo.');
-        return;
-      }
+  let maisProximo = null;
+  let menorDistancia = Infinity;
 
-      limparRotas(); // Limpa rotas anteriores
+  currentMarkers.forEach(marker => {
+    const { lat: latM, lng: lonM } = marker.getLatLng();
+    const distancia = calcularDistancia(lat, lon, latM, lonM);
+    if (distancia < menorDistancia) {
+      menorDistancia = distancia;
+      maisProximo = marker;
+    }
+  });
 
-      const destino = maisProximo.getLatLng();
+  if (!maisProximo) {
+    alert('Não foi possível encontrar o hospital mais próximo.');
+    return;
+  }
 
-      const rotaMaisProxima = L.Routing.control({
-        waypoints: [L.latLng(lat, lon), destino],
-        routeWhileDragging: false,
-        show: false,
-        addWaypoints: false,
-        lineOptions: {
-          styles: [{ color: 'red', weight: 5 }]
-        },
-        createMarker: () => null // 🔒 Remove os marcadores móveis da rota
-      }).addTo(map);
+  limparRotas(); // Limpa rotas anteriores
 
-      activeRoutes.push(rotaMaisProxima);
-      map.setView(destino, 15);
-      maisProximo.openPopup();
+  const destino = maisProximo.getLatLng();
+  const distancia = Math.round(calcularDistancia(lat, lon, destino.lat, destino.lng));
+  let superlotacao = maisProximo.options.superlotacao;
+  let name = maisProximo.getPopup().getContent().match(/<b>(.*?)<\/b>/)?.[1] || "Estabelecimento de saúde";
+
+  const rotaMaisProxima = L.Routing.control({
+    waypoints: [L.latLng(lat, lon), destino],
+    routeWhileDragging: false,
+    show: false,
+    addWaypoints: false,
+    lineOptions: {
+      styles: [{ color: 'red', weight: 5 }]
+    },
+    createMarker: () => null // 🔒 Remove os marcadores móveis da rota
+  }).addTo(map);
+
+  activeRoutes.push(rotaMaisProxima);
+  map.setView(destino, 15);
+
+  // Busca tempo de carro e mostra popup
+  try {
+    const tempoCarro = await getCarTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng });
+    maisProximo.bindPopup(
+      `<b>${name}</b><br>
+      <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Tempo de carro: <b>${tempoCarro}</b><br>
+      <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
+    );
+    maisProximo.openPopup();
+  } catch (e) {
+    maisProximo.bindPopup(
+      `<b>${name}</b><br>
+      <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Não foi possível calcular o tempo de viagem.`
+    );
+    maisProximo.openPopup();
+  }
+});
     });
 
   }, (err) => {
     console.error('Erro ao obter localização:', err);
     alert('Erro ao acessar geolocalização.');
   });
-});
+  
 // ...existing code...
 
 async function getCarTravelTimeORS(origem, destino) {
@@ -316,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
       itens.forEach(item => {
         const texto = item.textContent.toLowerCase();
         item.style.display = texto.includes(termo) ? 'block' : 'none';
+        
       });
     });
   }
