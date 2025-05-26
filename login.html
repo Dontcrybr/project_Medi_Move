@@ -6,6 +6,7 @@
     <title>Medi Move - Login</title>
     <link rel="stylesheet" href="/styles/login.css" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="shortcut icon" href="/imgs/logo tcc.png" type="image/x-icon" style="border-radius: 50%;">
     <style>
     /* Só um mini ajuste pra esconder forms */
     .hidden {
@@ -68,8 +69,14 @@ body.dark-mode h2 {
     background-color: #3a3a52;
     color: #fff;
   }
-  body.dark-mode .g_id_signin {
-  filter: brightness(0.9) contrast(1.2);
+ body.dark-mode .g_id_signin {
+  border-radius: 8px;
+  padding: 4px 0;
+  background-color: var(--form-bg)!important;
+}
+body.dark-mode .g_id_signin div {
+  color: var(--btn-text) !important;
+  background-color: #3a3a52 !important;
 }
 .g_id_signin {
   width: 100% !important;
