@@ -566,12 +566,15 @@ function adicionarEventoAgendamento() {
 // Mensagem de sucesso
 function mostrarMensagemSucesso(nome, hospital, horario) {
   const msg = document.getElementById("mensagem-sucesso");
+  const overlay = document.getElementById("sucesso-overlay");
   msg.innerHTML = `<i class="fa fa-check-circle"></i> Consulta com <b>${nome}</b> no <b>${hospital}</b> às <b>${horario}</b> agendada com sucesso!`;
   msg.style.display = "flex";
+  overlay.style.display = "block";
   setTimeout(() => {
     msg.style.display = "none";
+    overlay.style.display = "none";
     document.getElementById("resultados-consulta").style.display = "none";
     document.getElementById("consulta-form").reset();
     setUserLocation(userLocation); // Mantém localização detectada
-  }, 3500);
+  }, 5000);
 }

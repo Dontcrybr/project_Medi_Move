@@ -278,19 +278,47 @@ input:focus, select:focus, textarea:focus {
   color: var(--h2-color);
   font-weight: 500;
 }
+#sucesso-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 9998;
+  display: none;
+}
+/* Centraliza a mensagem de sucesso como um modal */
 .mensagem-sucesso {
-  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99990;
+  background: #fff;
+  color: #28a745;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #0003;
+  padding: 2.0em 2.3em;
+  font-size: 1.2em;
+  display: none;
   align-items: center;
-  gap: 0.7em;
-  background: #d4ffe1;
-  color: #1b7c3a;
-  border-radius: 8px;
-  padding: 1em 1.5em;
-  font-size: 1.1em;
-  margin: 2em auto 0 auto;
-  max-width: 400px;
   justify-content: center;
-  box-shadow: 0 1px 8px #0001;
+  flex-direction: column;
+  text-align: center;
+  min-width: 320px;
+  max-width: 90vw;
+  gap: 0.5em;
+  border: 2px solid #28a745;
+}
+.mensagem-sucesso i {
+  font-size: 2.5em;
+  color: #28a745;
+  margin-bottom: 0.5em;
+}
+@media (max-width: 500px) {
+  .mensagem-sucesso {
+    padding: 1.2em 0.7em;
+    font-size: 1em;
+    min-width: 0;
+  }
 }
 @media (max-width: 600px) {
     .consulta-main {
