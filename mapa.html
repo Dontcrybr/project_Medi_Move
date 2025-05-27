@@ -131,6 +131,38 @@
         .logout-float-btn {
    display: block !important;
   }
+  .btn-localizacao-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #005eff 60%, #28a745 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1.1em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.btn-localizacao-mobile:hover, .btn-localizacao-mobile:focus {
+  background: linear-gradient(90deg, #003fa3 60%, #218838 100%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transform: translateX(-50%) scale(1.03);
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .btn-localizacao-mobile {
+    display: none !important;
+  }
+}
       }
     </style>
   </head>
@@ -164,6 +196,10 @@
       </nav>
     </header>
 
+    <button id="ativar-localizacao-mobile" class="btn-localizacao-mobile" style="display:none;">
+  <img src="/imgs/logo tcc sem fundo.png" alt="Ativar localização" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;">
+  <span>Ative sua localização para encontrar serviços próximos!</span>
+</button>
     <!-- MAPA -->
     <main>
       <div id="lista-lateral">
@@ -362,6 +398,30 @@ function getDistance(coord1, coord2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   return R * c;
 }
+document.addEventListener('DOMContentLoaded', () => {
+  // ...existing code...
+
+  // Exibe botão só se geolocalização não estiver disponível ou negada
+  if (!navigator.geolocation) {
+    document.getElementById('ativar-localizacao-mobile').style.display = 'flex';
+  } else {
+    navigator.geolocation.getCurrentPosition(
+      () => {},
+      (err) => {
+        if (window.innerWidth < 768) {
+          document.getElementById('ativar-localizacao-mobile').style.display = 'flex';
+        }
+      }
+    );
+  }
+
+  // Ação ao clicar no botão
+  document.getElementById('ativar-localizacao-mobile').onclick = function() {
+    alert('Por favor, ative a localização do seu dispositivo nas configurações para usar todos os recursos do mapa.');
+  };
+
+  // ...existing code...
+});
 </script>
 
     </script>

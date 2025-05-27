@@ -16,7 +16,7 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
 function gerarTransitoAleatorio() {
   const niveis = [
     { texto: "Leve", cor: "#28a745" },
-    { texto: "Moderado", cor: "#ffc107", corTexto: "#222" },
+    { texto: "Moderado", cor: "#ffc107" },
     { texto: "Intenso", cor: "#dc3545" }
   ];
   return niveis[Math.floor(Math.random() * niveis.length)];
