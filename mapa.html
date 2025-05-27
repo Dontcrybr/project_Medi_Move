@@ -182,6 +182,9 @@
           placeholder="Pesquisar local..." 
           style="width: 100%; margin: 10px 0 15px 0; padding: 8px; border-radius: 8px; border: 1px solid #ccc;"
         />
+<div id="status-transito" style="margin-bottom: 10px; font-weight: bold;">
+  <span id="transito-indicador" style="padding: 6px 12px; border-radius: 8px;">Trânsito: --</span>
+</div>
         <button id="btnRota" style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">Rota mais proxima e menos superlotada</button>
         <button id="rota-mais-proxima"
           style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">
@@ -359,7 +362,6 @@ function getDistance(coord1, coord2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   return R * c;
 }
-
 </script>
 
     </script>
