@@ -440,16 +440,6 @@ async function buscarHospitaisOverpass(center, raioMetros = 5000) {
     name: el.tags?.name || "Hospital sem nome"
   }));
 }
-// Exemplo: buscar hospitais em um raio de 5km do centro do mapa
-const center = { lat: -23.55052, lon: -46.633308 }; // São Paulo, por exemplo
-buscarHospitaisOverpass(center, 5000).then(hospitais => {
-  hospitais.forEach(hospital => {
-    // Adicione o marcador no mapa
-    L.marker([hospital.lat, hospital.lon])
-      .addTo(map)
-      .bindPopup(hospital.name);
-  });
-});
 // Exemplo de uso:
 // getTravelTimes({lat: -23.55, lng: -46.63}, {lat: -23.56, lng: -46.65}).then(console.log);
 function gerarSuperlotacao() {

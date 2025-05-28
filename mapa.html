@@ -135,8 +135,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa; /* leve cinza para não ficar branco puro */
-  color: #222;
+  background: #f8f9fa;
+  color: #222 !important;
   font-weight: 500;
   border: 1.5px solid #005eff;
   border-radius: 10px;
@@ -153,8 +153,8 @@
 }
 
 .btn-localizacao-mobile:hover, .btn-localizacao-mobile:focus {
-  border-color: #003fa3;
-  color: #003fa3;
+  border-color: #003fa3 !important;
+  color: #003fa3 !important;
   background: #f4f8ff;
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
@@ -415,6 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
       () => {
         if (window.innerWidth < 768) {
           btnLocalizacao.style.display = 'flex';
+        } else {
+          btnLocalizacao.style.display = 'none';
         }
       }
     );
@@ -426,12 +428,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       () => {
-        // Permissão concedida, recarrega a página para ativar o mapa
         window.location.reload();
       },
-      () => {
-        // Permissão negada, mantém o botão visível
+      (err) => {
         btnLocalizacao.style.display = 'flex';
+        if (err.code === 1) {
+          alert('Permita o acesso à localização para encontrar hospitais próximos.');
+        }
       }
     );
   };
@@ -441,5 +444,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
     </script>
-  </body>
+  </body> 
 </html>
