@@ -466,9 +466,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   checarLocalizacao();
 
-  btnLocalizacao.onclick = function() {
-    location.reload();
-  };
+  if (btnLocalizacao) {
+    btnLocalizacao.onclick = function() {
+      location.reload();
+    };
+  }
 
   window.addEventListener('focus', checarLocalizacao);
 });
