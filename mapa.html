@@ -412,15 +412,61 @@ function getDistance(coord1, coord2) {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const btnLocalizacao = document.getElementById('ativar-localizacao-mobile');
+  const mapaDiv = document.getElementById('map');
+  const listaLateral = document.getElementById('lista-lateral');
+
+  let mapInstance = null;
+  function inicializarMapa() {
+    if (mapInstance) {
+      mapInstance.remove();
+      mapInstance = null;
+    }
+    mapInstance = L.map('map').setView([-23.5505, -46.6333], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(mapInstance);
+    // Adicione marcadores, rotas, etc, aqui
+  }
+
+  function mostrarAviso(msg) {
+    let aviso = document.getElementById('aviso-mapa');
+    if (!aviso) {
+      aviso = document.createElement('div');
+      aviso.id = 'aviso-mapa';
+      aviso.style = `
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255,255,255,0.96);
+        display: flex; align-items: center; justify-content: center;
+        color: #555; font-size: 1.1em; text-align: center;
+        z-index: 1000;
+      `;
+      mapaDiv.style.position = 'relative';
+      mapaDiv.appendChild(aviso);
+    }
+    aviso.innerHTML = msg;
+    aviso.style.display = 'flex';
+    // Se quiser esconder a lista lateral, descomente a linha abaixo:
+    // if (listaLateral) listaLateral.style.display = 'none';
+  }
+
+  function mostrarMapaELista() {
+    let aviso = document.getElementById('aviso-mapa');
+    if (aviso) aviso.style.display = 'none';
+    if (listaLateral) listaLateral.style.display = '';
+    inicializarMapa();
+  }
 
   function checarLocalizacao() {
     if (!navigator.geolocation) {
       btnLocalizacao.style.display = 'flex';
+      mostrarAviso('Seu navegador não suporta geolocalização.');
       return;
     }
     navigator.geolocation.getCurrentPosition(
       () => {
         btnLocalizacao.style.display = 'none';
+        mostrarMapaELista();
       },
       () => {
         if (window.innerWidth < 768) {
@@ -428,6 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           btnLocalizacao.style.display = 'none';
         }
+        mostrarAviso('Ative a localização para visualizar hospitais próximos no mapa.');
       }
     );
   }
@@ -438,13 +485,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       () => {
-        window.location.reload();
+        mostrarMapaELista();
       },
       (err) => {
         btnLocalizacao.style.display = 'flex';
         if (err.code === 1) {
           alert('Permita o acesso à localização para encontrar hospitais próximos.');
         }
+        mostrarAviso('Ative a localização para visualizar hospitais próximos no mapa.');
       }
     );
   };
