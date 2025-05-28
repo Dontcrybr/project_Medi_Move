@@ -415,19 +415,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapaDiv = document.getElementById('map');
   const listaLateral = document.getElementById('lista-lateral');
 
-  let mapInstance = null;
-  function inicializarMapa() {
-    if (mapInstance) {
-      mapInstance.remove();
-      mapInstance = null;
-    }
-    mapInstance = L.map('map').setView([-23.5505, -46.6333], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(mapInstance);
-    // Adicione marcadores, rotas, etc, aqui
-  }
-
   function mostrarAviso(msg) {
     let aviso = document.getElementById('aviso-mapa');
     if (!aviso) {
@@ -446,15 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     aviso.innerHTML = msg;
     aviso.style.display = 'flex';
-    // Se quiser esconder a lista lateral, descomente a linha abaixo:
-    // if (listaLateral) listaLateral.style.display = 'none';
+    // NÃO esconda a lista lateral aqui!
   }
 
-  function mostrarMapaELista() {
+  function esconderAviso() {
     let aviso = document.getElementById('aviso-mapa');
     if (aviso) aviso.style.display = 'none';
-    if (listaLateral) listaLateral.style.display = '';
-    inicializarMapa();
+    // NÃO mexa na lista lateral aqui!
   }
 
   function checarLocalizacao() {
@@ -466,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.geolocation.getCurrentPosition(
       () => {
         btnLocalizacao.style.display = 'none';
-        mostrarMapaELista();
+        esconderAviso();
       },
       () => {
         if (window.innerWidth < 768) {
@@ -482,19 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
   checarLocalizacao();
 
   btnLocalizacao.onclick = function() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      () => {
-        mostrarMapaELista();
-      },
-      (err) => {
-        btnLocalizacao.style.display = 'flex';
-        if (err.code === 1) {
-          alert('Permita o acesso à localização para encontrar hospitais próximos.');
-        }
-        mostrarAviso('Ative a localização para visualizar hospitais próximos no mapa.');
-      }
-    );
+    location.reload();
   };
 
   window.addEventListener('focus', checarLocalizacao);
