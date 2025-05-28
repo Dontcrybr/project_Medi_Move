@@ -135,7 +135,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: #f8f9fa; /* leve cinza para não ficar branco puro */
   color: #222;
   font-weight: 500;
   border: 1.5px solid #005eff;
@@ -162,7 +162,7 @@
 @media (min-width: 768px) {
   .btn-localizacao-mobile {
     display: none !important;
-}
+  }
 }
       }
     </style>
@@ -201,6 +201,7 @@
   <i class="fa-solid fa-location-crosshairs" style="font-size:1.3em;margin-right:10px;"></i>
   <span>Ativar localização para mostrar hospitais próximos</span>
 </button>
+
     <!-- MAPA -->
     <main>
       <div id="lista-lateral">
@@ -435,7 +436,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   };
 
-  // Opcional: recarrega ao mudar permissão (em alguns navegadores)
   window.addEventListener('focus', checarLocalizacao);
 });
 </script>
