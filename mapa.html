@@ -163,6 +163,14 @@
   .btn-localizacao-mobile {
     display: none !important;
   }
+  
+}
+.btn-localizacao-mobile {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex ;
+  align-items: center !important;
+  justify-content: center !important;
 }
       }
     </style>
@@ -400,6 +408,8 @@ function getDistance(coord1, coord2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   return R * c;
 }
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const btnLocalizacao = document.getElementById('ativar-localizacao-mobile');
 
