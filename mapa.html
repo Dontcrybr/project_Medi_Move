@@ -228,9 +228,19 @@
           placeholder="Pesquisar local..." 
           style="width: 100%; margin: 10px 0 15px 0; padding: 8px; border-radius: 8px; border: 1px solid #ccc;"
         />
+          <!-- Adicione dentro de #lista-lateral, antes dos botões de rota -->
+<div style="margin-bottom: 12px;">
+  <label for="modo-transporte"><strong>Modo de transporte:</strong></label>
+  <select id="modo-transporte">
+    <option value="driving-car">Carro</option>
+    <option value="cycling-regular">Bicicleta</option>
+    <option value="foot-walking">A pé</option>
+  </select>
+</div>
 <div id="status-transito" style="margin-bottom: 10px; font-weight: bold;">
   <span id="transito-indicador" style="padding: 6px 12px; border-radius: 8px;">Trânsito: --</span>
 </div>
+      
         <button id="btnRota" style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">Rota mais proxima e menos superlotada</button>
         <button id="rota-mais-proxima"
           style="margin-bottom: 10px; padding: 10px; border: none; cursor: pointer;">

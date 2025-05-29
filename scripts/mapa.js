@@ -37,9 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  const selectModo = document.getElementById('modo-transporte');
+function getModoSelecionado() {
+  return selectModo ? selectModo.value : "driving-car";
+}
+
   navigator.geolocation.getCurrentPosition((position) => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
+    
 
     const map = L.map('map').setView([lat, lon], 14);
     console.log("Mapa inicializado");
@@ -61,12 +67,54 @@ document.addEventListener('DOMContentLoaded', () => {
       .bindPopup('Você está aqui')
       .openPopup();
 
+    let transporteMarkers = [];
     let currentMarkers = [];
     let activeRoutes = [];
+
+    selectModo.addEventListener('change', async () => {
+  // Verifica se há uma rota ativa e um popup aberto
+  const markerAberto = currentMarkers.find(m => m.isPopupOpen && m.isPopupOpen());
+  if (!markerAberto) return;
+
+  const destino = markerAberto.getLatLng();
+  const modo = getModoSelecionado();
+  const transito = gerarTransitoAleatorio();
+  atualizarStatusTransito(transito);
+  const distancia = Math.round(calcularDistancia(lat, lon, destino.lat, destino.lng));
+  let superlotacao = markerAberto.options.superlotacao;
+  let name = markerAberto.getPopup().getContent().match(/<b>(.*?)<\/b>/)?.[1] || "Estabelecimento de saúde";
+
+  try {
+    const tempoViagem = await getTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng }, modo, transito.texto);
+    markerAberto.setPopupContent(
+      `<b>${name}</b><br>
+      <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
+        Trânsito: ${transito.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Tempo (${modo === "driving-car" ? "carro" : modo === "cycling-regular" ? "bicicleta" : "a pé"}): <b>${tempoViagem}</b><br>
+      <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
+    );
+  } catch (e) {
+    markerAberto.setPopupContent(
+      `<b>${name}</b><br>
+      <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Não foi possível calcular o tempo de viagem.`
+    );
+  }
+});
 
     function limparRotas() {
   activeRoutes.forEach(route => map.removeControl(route));
   activeRoutes = [];
+   transporteMarkers.forEach(m => map.removeLayer(m)); // Limpa pontos de transporte público
+  transporteMarkers = [];
   // Limpa o status de trânsito lateral
   const indicador = document.getElementById("transito-indicador");
   if (indicador) {
@@ -147,19 +195,20 @@ marker.on('click', async () => {
 atualizarStatusTransito(transito); // <-- Adicione esta linha
 
   try {
-    const tempoCarro = await getCarTravelTimeORS(origem, destino , transito.texto);
-    marker.bindPopup(
-      `<b>${name}</b><br>
-      <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
-        ${superlotacao.texto}
-      </span><br>
-      <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
-        Trânsito: ${transito.texto}
-      </span><br>
-      Distância: <b>${distancia} m</b><br>
-      Tempo de carro: <b>${tempoCarro}</b><br>
-      <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
-    );
+   const modo = getModoSelecionado();
+const tempoViagem = await getTravelTimeORS(origem, destino, modo, transito.texto);
+marker.bindPopup(
+  `<b>${name}</b><br>
+  <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
+    ${superlotacao.texto}
+  </span><br>
+  <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
+    Trânsito: ${transito.texto}
+  </span><br>
+  Distância: <b>${distancia} m</b><br>
+  Tempo (${modo === "driving-car" ? "carro" : modo === "cycling-regular" ? "bicicleta" : "a pé"}): <b>${tempoViagem}</b><br>
+  <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
+);
     marker.openPopup();
   } catch (e) {
     marker.bindPopup(
@@ -175,6 +224,29 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
     );
     marker.openPopup();
   }
+ transporteMarkers.forEach(m => map.removeLayer(m));
+transporteMarkers = [];
+try {
+  const pontos = await buscarTransportePublico(local.lat, local.lon, 700);
+  pontos.forEach(ponto => {
+    let icon;
+    if (ponto.tags.highway === "bus_stop") {
+      icon = L.icon({ iconUrl: '/imgs/bus.png', iconSize: [22, 22], iconAnchor: [11, 22] });
+    } else if (ponto.tags.railway === "station") {
+      icon = L.icon({ iconUrl: '/imgs/train.png', iconSize: [22, 22], iconAnchor: [11, 22] });
+    } else if (ponto.tags.railway === "subway_entrance") {
+      icon = L.icon({ iconUrl: '/imgs/metro.png', iconSize: [22, 22], iconAnchor: [11, 22] });
+    }
+    if (icon) {
+      const m = L.marker([ponto.lat, ponto.lon], { icon })
+        .addTo(map)
+        .bindPopup(`<b>${ponto.tags.name || "Ponto de transporte público"}</b>`);
+      transporteMarkers.push(m);
+    }
+  });
+} catch (e) {
+  console.error("Erro ao buscar transporte público:", e);
+}
 });
 
          const li = document.createElement('li');
@@ -266,8 +338,9 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
 
   // Busca tempo de carro e mostra popup
   try {
-    const tempoCarro = await getCarTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng }, transito.texto);
-   melhorMarker.bindPopup(
+    const modo = getModoSelecionado();
+const tempoViagem = await getTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng }, modo, transito.texto);
+melhorMarker.bindPopup(
   `<b>${name}</b><br>
   <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
     ${superlotacao.texto}
@@ -276,7 +349,7 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
     Trânsito: ${transito.texto}
   </span><br>
   Distância: <b>${distancia} m</b><br>
-  Tempo de carro: <b>${tempoCarro}</b><br>
+  Tempo (${modo === "driving-car" ? "carro" : modo === "cycling-regular" ? "bicicleta" : "a pé"}): <b>${tempoViagem}</b><br>
   <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
 );
     melhorMarker.openPopup();
@@ -294,7 +367,7 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
 });
       document.getElementById('limpar-rotas').addEventListener('click', limparRotas);
 
-     document.getElementById('rota-mais-proxima').addEventListener('click', async () => {
+    document.getElementById('rota-mais-proxima').addEventListener('click', async () => {
   if (!currentMarkers.length) {
     alert('Nenhum local carregado ainda.');
     return;
@@ -320,8 +393,8 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
   limparRotas(); // Limpa rotas anteriores
 
   const destino = maisProximo.getLatLng();
- const transito = gerarTransitoAleatorio();
-atualizarStatusTransito(transito); // <-- Adicione esta linha
+  const transito = gerarTransitoAleatorio();
+  atualizarStatusTransito(transito);
   const distancia = Math.round(calcularDistancia(lat, lon, destino.lat, destino.lng));
   let superlotacao = maisProximo.options.superlotacao;
   let name = maisProximo.getPopup().getContent().match(/<b>(.*?)<\/b>/)?.[1] || "Estabelecimento de saúde";
@@ -340,36 +413,37 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
   activeRoutes.push(rotaMaisProxima);
   map.setView(destino, 15);
 
-  // Busca tempo de carro e mostra popup
- try {
-  const tempoCarro = await getCarTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng }, transito.texto);
-  maisProximo.bindPopup(
-    `<b>${name}</b><br>
-    <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
-      ${superlotacao.texto}
-    </span><br>
-    <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
-      Trânsito: ${transito.texto}
-    </span><br>
-    Distância: <b>${distancia} m</b><br>
-    Tempo de carro: <b>${tempoCarro}</b><br>
-    <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
-  );
-  maisProximo.openPopup();
-} catch (e) {
-  maisProximo.bindPopup(
-    `<b>${name}</b><br>
-    <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
-      ${superlotacao.texto}
-    </span><br>
-    <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
-      Trânsito: ${transito.texto}
-    </span><br>
-    Distância: <b>${distancia} m</b><br>
-    Não foi possível calcular o tempo de viagem.`
-  );
-  maisProximo.openPopup();
-}
+  // Busca tempo de viagem e mostra popup
+  try {
+    const modo = getModoSelecionado();
+    const tempoViagem = await getTravelTimeORS({ lat, lng: lon }, { lat: destino.lat, lng: destino.lng }, modo, transito.texto);
+    maisProximo.bindPopup(
+      `<b>${name}</b><br>
+      <span class="status-text" style="background:${superlotacao.cor};padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
+        Trânsito: ${transito.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Tempo (${modo === "driving-car" ? "carro" : modo === "cycling-regular" ? "bicicleta" : "a pé"}): <b>${tempoViagem}</b><br>
+      <span style="color:gray;font-size:0.9em;">(Ônibus indisponível no ORS)</span>`
+    );
+    maisProximo.openPopup();
+  } catch (e) {
+    maisProximo.bindPopup(
+      `<b>${name}</b><br>
+      <span style="background:${superlotacao.cor};color:#fff;padding:2px 8px;border-radius:8px;">
+        ${superlotacao.texto}
+      </span><br>
+      <span style="background:${transito.cor};color:${transito.corTexto || '#fff'};padding:2px 8px;border-radius:8px;font-weight:bold;">
+        Trânsito: ${transito.texto}
+      </span><br>
+      Distância: <b>${distancia} m</b><br>
+      Não foi possível calcular o tempo de viagem.`
+    );
+    maisProximo.openPopup();
+  }
 });
     });
 
@@ -379,10 +453,9 @@ atualizarStatusTransito(transito); // <-- Adicione esta linha
   });
   
 // ...existing code...
-
-async function getCarTravelTimeORS(origem, destino, nivelTransito = "Leve") {
+async function getTravelTimeORS(origem, destino, modo = "driving-car", nivelTransito = "Leve") {
   const apiKey = '5b3ce3597851110001cf6248ab3957fdac434b3797ab6c34bd67a22b';
-  const url = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
+  const url = `https://api.openrouteservice.org/v2/directions/${modo}/geojson`;
 
   const body = {
     coordinates: [
@@ -408,9 +481,11 @@ async function getCarTravelTimeORS(origem, destino, nivelTransito = "Leve") {
   const durationSec = data.features[0]?.properties?.summary?.duration;
   let durationMin = durationSec ? Math.round(durationSec / 60) : null;
 
-  // Ajuste conforme o trânsito
-  if (nivelTransito === "Moderado") durationMin = Math.round(durationMin * 1.3);
-  if (nivelTransito === "Intenso") durationMin = Math.round(durationMin * 1.7);
+  // Ajuste conforme o trânsito (apenas para carro)
+  if (modo === "driving-car") {
+    if (nivelTransito === "Moderado") durationMin = Math.round(durationMin * 1.3);
+    if (nivelTransito === "Intenso") durationMin = Math.round(durationMin * 1.7);
+  }
 
   return durationMin ? `${durationMin} min` : 'N/A';
 }
@@ -481,6 +556,26 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+  async function buscarTransportePublico(lat, lon, raio = 700) {
+  const query = `
+    [out:json][timeout:25];
+    (
+      node["highway"="bus_stop"](around:${raio},${lat},${lon});
+      node["railway"="station"](around:${raio},${lat},${lon});
+      node["railway"="subway_entrance"](around:${raio},${lat},${lon});
+    );
+    out body;
+  `;
+  const url = "https://overpass-api.de/api/interpreter";
+  const response = await fetch(url, {
+    method: "POST",
+    body: query,
+    headers: { "Content-Type": "text/plain" }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar transporte público");
+  const data = await response.json();
+  return data.elements;
+}
 });
 
 
